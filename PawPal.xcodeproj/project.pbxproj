@@ -26,10 +26,10 @@
 		9BC1BC412CBAF3EB00F1DD8E /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BC1BC402CBAF3EB00F1DD8E /* RegisterViewController.swift */; };
 		9BC1BC432CBAF3F800F1DD8E /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BC1BC422CBAF3F800F1DD8E /* HomeViewController.swift */; };
 		9BC2999A2CBAFAB9006BA3C9 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BC299992CBAFAB9006BA3C9 /* WelcomeViewController.swift */; };
+		A27BC4E32E17414700A03862 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A27BC4E22E17414700A03862 /* GoogleService-Info.plist */; };
 		AD5BAEA02D1A3F7E00E5A84A /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5BAE9F2D1A3F6600E5A84A /* ProfileViewController.swift */; };
 		AD5BAEA22D1A781E00E5A84A /* EnterProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5BAEA12D1A781700E5A84A /* EnterProfileViewController.swift */; };
 		AD66E5702D35B5DC00995985 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD66E56F2D35B5D500995985 /* AuthService.swift */; };
-		BAB95B6B2CE94D78000FB13F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BAB95B6A2CE94D78000FB13F /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,10 +53,10 @@
 		9BC1BC402CBAF3EB00F1DD8E /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
 		9BC1BC422CBAF3F800F1DD8E /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		9BC299992CBAFAB9006BA3C9 /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
+		A27BC4E22E17414700A03862 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		AD5BAE9F2D1A3F6600E5A84A /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		AD5BAEA12D1A781700E5A84A /* EnterProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterProfileViewController.swift; sourceTree = "<group>"; };
 		AD66E56F2D35B5D500995985 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
-		BAB95B6A2CE94D78000FB13F /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		BAC1F5E335E2CE1ED849DE2A /* Pods-PawPal.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PawPal.release.xcconfig"; path = "Target Support Files/Pods-PawPal/Pods-PawPal.release.xcconfig"; sourceTree = "<group>"; };
 		D107B905FDB9CA7E43E2F603 /* Pods-PawPal.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PawPal.debug.xcconfig"; path = "Target Support Files/Pods-PawPal/Pods-PawPal.debug.xcconfig"; sourceTree = "<group>"; };
 		DDE6B11A1AD9FA74B2D895BD /* Pods_PawPal.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PawPal.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -154,7 +154,7 @@
 				9BC1BC372CBAE8F800F1DD8E /* Controllers */,
 				9BC1BC2A2CBAE7E300F1DD8E /* Assets.xcassets */,
 				9BC1BC2F2CBAE7E300F1DD8E /* Info.plist */,
-				BAB95B6A2CE94D78000FB13F /* GoogleService-Info.plist */,
+				A27BC4E22E17414700A03862 /* GoogleService-Info.plist */,
 			);
 			path = PawPal;
 			sourceTree = "<group>";
@@ -268,9 +268,9 @@
 			files = (
 				9B1565172CFC3A2E0030B6C1 /* Home.storyboard in Resources */,
 				9BC1BC2B2CBAE7E300F1DD8E /* Assets.xcassets in Resources */,
+				A27BC4E32E17414700A03862 /* GoogleService-Info.plist in Resources */,
 				9B15651B2CFC3C710030B6C1 /* Map.storyboard in Resources */,
 				9B1565192CFC3B190030B6C1 /* Profile.storyboard in Resources */,
-				BAB95B6B2CE94D78000FB13F /* GoogleService-Info.plist in Resources */,
 				9BC1BC2E2CBAE7E300F1DD8E /* Base in Resources */,
 				9BC1BC292CBAE7E200F1DD8E /* Base in Resources */,
 				9B5006602CE98C48003297DD /* CommunityTableCell.xib in Resources */,
@@ -311,9 +311,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-PawPal/Pods-PawPal-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-PawPal/Pods-PawPal-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
