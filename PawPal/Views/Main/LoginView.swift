@@ -19,6 +19,7 @@ struct LoginView: View {
     @State private var errorMessage: String?
     @State private var navigateToProfileSetup = false
     @State private var navigateToMainApp = false
+    @State private var navigateToRegister = false 
 
     var body: some View {
         NavigationStack {
@@ -44,12 +45,20 @@ struct LoginView: View {
                     googleLogin()
                 }
                 .frame(height: 44)
+                
+                Button("Don't have an account? Register") {
+                    navigateToRegister = true
+                }
 
                 .navigationDestination(isPresented: $navigateToProfileSetup) {
                     EnterProfileView()
                 }
                 .navigationDestination(isPresented: $navigateToMainApp) {
                     MainAppView()
+                }
+                
+                .navigationDestination(isPresented: $navigateToRegister) {
+                    RegisterView()
                 }
             }
             .padding()
@@ -121,4 +130,8 @@ struct LoginView: View {
             }
         }
     }
+}
+
+#Preview {
+    LoginView()
 }
