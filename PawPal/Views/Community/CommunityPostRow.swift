@@ -31,3 +31,7 @@ struct CommunityPostRow: View {
         .padding(.vertical, 8)
     }
 }
+
+#Preview {
+    CommunityPostRow(post: CommunityPost(title: "Post 1", description: "Lost dog in Davis.", comments: 3, reactions: 10) )
+}
