@@ -24,3 +24,6 @@ struct CommunityView: View {
         }
     }
 }
+#Preview {
+    CommunityView()
+}
