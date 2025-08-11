@@ -104,7 +104,7 @@ struct EnterProfileView: View {
             return
         }
 
-        let imageRef = Storage.storage().reference().child("user_profiles/\(uid)/pet_image.jpg")
+        let imageRef = Storage.storage().reference().child("users/\(uid)/pet_image.jpg")
         guard let data = image.jpegData(compressionQuality: 0.8) else {
             errorMessage = "Could not compress image"
             completion(nil)
@@ -148,7 +148,7 @@ struct EnterProfileView: View {
             profile["imageURL"] = imageURL
         }
 
-        Firestore.firestore().collection("user9-s").document(uid).setData(profile) { error in
+        Firestore.firestore().collection("users").document(uid).setData(profile) { error in
             if let error = error {
                 errorMessage = "Failed to save profile: \(error.localizedDescription)"
                 return

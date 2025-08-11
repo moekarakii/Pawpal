@@ -13,7 +13,7 @@ struct RegisterView: View {
     @State private var email = ""
     @State private var password = ""
     @State private var errorMessage: String?
-    @State private var navigateToHome = false
+    @State private var navigateToProfileSetup = false
 
     var body: some View {
         VStack(spacing: 20) {
@@ -43,8 +43,8 @@ struct RegisterView: View {
                 dismiss()
             }
 
-            .navigationDestination(isPresented: $navigateToHome) {
-                MainAppView()
+            .navigationDestination(isPresented: $navigateToProfileSetup) {
+                EnterProfileView()
             }
         }
         .padding()
@@ -64,7 +64,7 @@ struct RegisterView: View {
             }
 
             print("Registration successful for user: \(result?.user.email ?? "No email")")
-            navigateToHome = true
+            navigateToProfileSetup = true
         }
     }
 }
