@@ -25,7 +25,7 @@
 		A22102C02E2B0DF100103E28 /* CommunityPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22102B72E2B01B500103E28 /* CommunityPost.swift */; };
 		A22102C12E2B0E3400103E28 /* FlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22102AE2E2AF86000103E28 /* FlowLayout.swift */; };
 		A22102C32E2B111D00103E28 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22102C22E2B111800103E28 /* ImagePicker.swift */; };
-		A27B1BC12E4AAA4900D67D57 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A27B1BC02E4AAA4900D67D57 /* GoogleService-Info.plist */; };
+		A27B1BC52E4ACC2500D67D57 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A27B1BC42E4ACC2500D67D57 /* GoogleService-Info.plist */; };
 		A27BC4E52E1E158500A03862 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = A27BC4E42E1E158500A03862 /* FirebaseAuth */; };
 		A27BC4E72E1E158500A03862 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = A27BC4E62E1E158500A03862 /* FirebaseCore */; };
 		A27BC4E92E1E158500A03862 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = A27BC4E82E1E158500A03862 /* FirebaseFirestore */; };
@@ -50,7 +50,7 @@
 		A22102B82E2B01CF00103E28 /* CommunityPostRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityPostRow.swift; sourceTree = "<group>"; };
 		A22102C22E2B111800103E28 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		A22102C42E2B121800103E28 /* PawPal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PawPal.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		A27B1BC02E4AAA4900D67D57 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		A27B1BC42E4ACC2500D67D57 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		AD66E56F2D35B5D500995985 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -150,9 +150,9 @@
 		A22102BB2E2B057A00103E28 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				A27B1BC02E4AAA4900D67D57 /* GoogleService-Info.plist */,
 				9BC1BC2F2CBAE7E300F1DD8E /* Info.plist */,
 				9BC1BC2A2CBAE7E300F1DD8E /* Assets.xcassets */,
+				A27B1BC42E4ACC2500D67D57 /* GoogleService-Info.plist */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -239,7 +239,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9BC1BC2B2CBAE7E300F1DD8E /* Assets.xcassets in Resources */,
-				A27B1BC12E4AAA4900D67D57 /* GoogleService-Info.plist in Resources */,
+				A27B1BC52E4ACC2500D67D57 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -399,7 +399,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = VB6N5HD2Q5;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				GENERATE_INFOPLIST_FILE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = PawPal/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -426,7 +426,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = VB6N5HD2Q5;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				GENERATE_INFOPLIST_FILE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = PawPal/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
