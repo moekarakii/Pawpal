@@ -4,8 +4,10 @@
 //
 //  Created by Khang Nguyen on 10/12/24.
 //  Modified by Moe Karaki on 7/18/25.
+//  Modified by Juan Zavala on 8/15/25
 //
-
+// Could be used later, will be commented out for now. 
+/*
 import SwiftUI
 
 struct CommunityView: View {
@@ -27,3 +29,4 @@ struct CommunityView: View {
 #Preview {
     CommunityView()
 }
+*/

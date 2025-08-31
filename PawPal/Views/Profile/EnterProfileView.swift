@@ -5,6 +5,12 @@
 //  Created by Hieu Hoang on 12/15/24.
 //  Modified by Moe Karaki on 7/15/25.
 //
+
+/*
+ * Note, the enterProfileView for a pet with an image as this does could be used if plan is upgraded on firebase.
+ * Will be kept for possible further use. 
+ */
+
 import SwiftUI
 import Firebase
 import FirebaseStorage

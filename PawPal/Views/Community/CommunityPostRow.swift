@@ -7,31 +7,21 @@
 
 import SwiftUI
 
-struct CommunityPostRow: View {
-    let post: CommunityPost
+struct LostPetRow: View {
+    let pet: LostPet
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(post.title)
+            Text(pet.petName)
                 .font(.headline)
 
-            Text(post.description)
+            Text(pet.description)
                 .font(.subheadline)
                 .foregroundColor(.secondary)
-
-            HStack {
-                Label("\(post.comments)", systemImage: "text.bubble")
-                Label("\(post.reactions)", systemImage: "hand.thumbsup")
-
-                Spacer()
-            }
-            .font(.caption)
-            .foregroundColor(.gray)
         }
-        .padding(.vertical, 8)
+        .padding()
+        .background(RoundedRectangle(cornerRadius: 12).fill(Color(.systemGray6)))
+        .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.gray.opacity(0.2)))
+        .padding(.vertical, 4)
     }
-}
-
-#Preview {
-    CommunityPostRow(post: CommunityPost(title: "Post 1", description: "Lost dog in Davis.", comments: 3, reactions: 10) )
 }

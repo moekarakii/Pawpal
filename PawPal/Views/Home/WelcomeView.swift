@@ -4,7 +4,8 @@
 //
 //  Created by Khang Nguyen on 10/12/24.
 //  Modified by Moe Karaki on 7/18/25.
-//
+//  Modified by Juan Zavala on 8/15/25
+
 import SwiftUI
 
 struct WelcomeView: View {
@@ -31,6 +32,7 @@ struct WelcomeView: View {
                 }
                 .padding(.horizontal)
             }
+            .frame(maxHeight: .infinity, alignment: .top)
             .padding()
         }
     }

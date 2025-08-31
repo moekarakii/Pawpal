@@ -4,6 +4,12 @@
 //
 //  Created by Khang Nguyen on 10/12/24.
 //  Modifed by Moe Karaki on 7/18/25.
+//  Modified by Juan Zavala on 7/30/25
+
+/*
+ *  The current map in LostPetReportView could and should be refactored here in the future. 
+ */
+
 //
 import SwiftUI
 import MapKit
