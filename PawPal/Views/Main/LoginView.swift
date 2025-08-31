@@ -90,7 +90,9 @@ struct LoginView: View {
             return
         }
 
-        //let config = GIDConfiguration(clientID: clientID)
+        //This line ensures Google Sign-In uses the correct iOS client ID
+        GIDSignIn.sharedInstance.configuration = GIDConfiguration(clientID: clientID)
+
         guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
               let rootViewController = scene.windows.first?.rootViewController else {
             errorMessage = "Unable to find root view controller."
