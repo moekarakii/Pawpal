@@ -49,12 +49,14 @@ struct LoginView: View {
                 Button("Don't have an account? Register") {
                     navigateToRegister = true
                 }
-
+                
                 .navigationDestination(isPresented: $navigateToProfileSetup) {
                     EnterProfileView()
                 }
+                 
                 .navigationDestination(isPresented: $navigateToMainApp) {
-                    MainAppView()
+                    //MainAppView()
+                    MainTabView()
                 }
                 
                 .navigationDestination(isPresented: $navigateToRegister) {
@@ -77,7 +79,8 @@ struct LoginView: View {
                 errorMessage = error.localizedDescription
                 return
             }
-            checkUserProfileExists()
+            //checkUserProfileExists()
+            navigateToMainApp = true
         }
     }
 
@@ -114,7 +117,8 @@ struct LoginView: View {
                     return
                 }
 
-                checkUserProfileExists()
+                //checkUserProfileExists()
+                navigateToMainApp = true 
             }
         }
     }

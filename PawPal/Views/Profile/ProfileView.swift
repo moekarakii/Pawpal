@@ -4,7 +4,12 @@
 //
 //  Created by Hieu Hoang on 12/15/24.
 //  Modified by Moe Karaki on 7/18/25.
-//
+//  Modified by Juan Zavala on 8/03/25
+
+/*
+ * Note, the profile View with an image as this does could be used if plan is upgraded on firebase
+ */
+
 import SwiftUI
 
 struct PetProfile {

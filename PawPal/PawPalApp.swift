@@ -13,7 +13,8 @@ struct PawPalApp: App {
 
     var body: some Scene {
         WindowGroup {
-            WelcomeView() // we can change this to LoginView or HomeView if needed
+            WelcomeView()
+            //LostPetReportView();
         }
     }
 }
