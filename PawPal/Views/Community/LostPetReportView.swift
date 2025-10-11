@@ -10,6 +10,20 @@ import MapKit
 import Firebase
 import CoreLocation
 
+enum Validators {
+    static func isValidPetName(_ s: String) -> Bool {
+        let t = s.trimmingCharacters(in: .whitespacesAndNewlines)
+        return t.count >= 2 && t.count <= 40
+    }
+    static func isValidDescription(_ s: String) -> Bool {
+        let t = s.trimmingCharacters(in: .whitespacesAndNewlines)
+        return t.count >= 10 && t.count <= 500
+    }
+    static func isValidCoordinate(lat: Double, lon: Double) -> Bool {
+        (-90.0...90.0).contains(lat) && (-180.0...180.0).contains(lon)
+    }
+}
+
 extension UIApplication {
     func endEditing() {
         sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
@@ -102,17 +116,28 @@ struct LostPetReportView: View {
     }
 
     private func submitLostPetReport() {
-        guard !petName.isEmpty, !petDescription.isEmpty else { return }
+        let lat = pinCoordinate.latitude
+        let lon = pinCoordinate.longitude
+
+        guard Validators.isValidPetName(petName) else {
+            print("Invalid pet name (2–40 chars)"); return
+        }
+        guard Validators.isValidDescription(petDescription) else {
+            print("Invalid description (10–500 chars)"); return
+        }
+        guard Validators.isValidCoordinate(lat: lat, lon: lon) else {
+            print("Invalid coordinates"); return
+        }
 
         let data: [String: Any] = [
-            "petName": petName,
-            "description": petDescription,
-            "lat": pinCoordinate.latitude,
-            "lng": pinCoordinate.longitude,
-            "timestamp": FieldValue.serverTimestamp()
+            FS.LostPets.petName: petName,
+            FS.LostPets.description: petDescription,
+            FS.LostPets.lat: pinCoordinate.latitude,
+            FS.LostPets.lng: pinCoordinate.longitude,
+            FS.LostPets.timestamp: FieldValue.serverTimestamp()
         ]
 
-        Firestore.firestore().collection("lost_pets").addDocument(data: data) { error in
+        Firestore.firestore().collection(FS.LostPets.collection).addDocument(data: data) { error in
             if let error = error {
                 print("Error submitting report: \(error.localizedDescription)")
             } else {
