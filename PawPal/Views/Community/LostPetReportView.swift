@@ -9,6 +9,22 @@ import SwiftUI
 import MapKit
 import Firebase
 import CoreLocation
+import FirebaseFirestore
+import UIKit
+
+enum Validators {
+    static func isValidPetName(_ s: String) -> Bool {
+        let t = s.trimmingCharacters(in: .whitespacesAndNewlines)
+        return t.count >= 2 && t.count <= 40
+    }
+    static func isValidDescription(_ s: String) -> Bool {
+        let t = s.trimmingCharacters(in: .whitespacesAndNewlines)
+        return t.count >= 10 && t.count <= 500
+    }
+    static func isValidCoordinate(lat: Double, lon: Double) -> Bool {
+        (-90.0...90.0).contains(lat) && (-180.0...180.0).contains(lon)
+    }
+}
 
 extension UIApplication {
     func endEditing() {
@@ -28,6 +44,10 @@ struct LostPetReportView: View {
     @State private var searchCompleter = MKLocalSearchCompleter()
     @State private var hasManuallySelectedLocation = false
 
+    @State private var alertMessage: String = ""
+    @State private var showAlert: Bool = false
+    @State private var isSubmitting: Bool = false
+
     var body: some View {
         ScrollView {
             VStack(spacing: 16) {
@@ -43,9 +63,9 @@ struct LostPetReportView: View {
 
                 TextField("Search for a place...", text: $searchQuery)
                     .textFieldStyle(.roundedBorder)
-                    .onChange(of: searchQuery) {
-                        print("🔤 User typed: \(searchQuery)")
-                        searchCompleter.queryFragment = searchQuery
+                    .onChange(of: searchQuery) { newValue in
+                        print("🔤 User typed: \(newValue)")
+                        searchCompleter.queryFragment = newValue
                     }
                     .onAppear {
                         print("🧩 Setting completer delegate")
@@ -84,7 +104,7 @@ struct LostPetReportView: View {
                         setCameraAndPin(to: userLocation.coordinate)
                     }
                 }
-                .onChange(of: locationManager.location) {
+                .onReceive(locationManager.$location) { _ in
                     print("📍 Location changed to: \(String(describing: locationManager.location?.coordinate))")
                     if !hasManuallySelectedLocation, let coord = locationManager.location?.coordinate {
                         setCameraAndPin(to: coord)
@@ -99,24 +119,56 @@ struct LostPetReportView: View {
             .padding()
         }
         .navigationTitle("Report Lost Pet")
+
+        .alert(isPresented: $showAlert) {
+            Alert(
+                title: Text("Report Status"),
+                message: Text(alertMessage),
+                dismissButton: .default(Text("OK"))
+            )
+        }
     }
 
     private func submitLostPetReport() {
-        guard !petName.isEmpty, !petDescription.isEmpty else { return }
+        let lat = pinCoordinate.latitude
+        let lon = pinCoordinate.longitude
+
+        guard Validators.isValidPetName(petName) else {
+            alertMessage = "Please enter a valid pet name (2–40 characters)."
+            showAlert = true; return
+        }
+        guard Validators.isValidDescription(petDescription) else {
+            alertMessage = "Please enter a valid description (10–500 characters)."
+            showAlert = true; return
+        }
+        guard Validators.isValidCoordinate(lat: lat, lon: lon) else {
+            alertMessage = "Please select a valid location on the map."
+            showAlert = true; return
+        }
+
+        isSubmitting = true
 
         let data: [String: Any] = [
-            "petName": petName,
-            "description": petDescription,
-            "lat": pinCoordinate.latitude,
-            "lng": pinCoordinate.longitude,
-            "timestamp": FieldValue.serverTimestamp()
+            FS.LostPets.petName: petName,
+            FS.LostPets.description: petDescription,
+            FS.LostPets.lat: pinCoordinate.latitude,
+            FS.LostPets.lng: pinCoordinate.longitude,
+            FS.LostPets.timestamp: FieldValue.serverTimestamp()
         ]
 
-        Firestore.firestore().collection("lost_pets").addDocument(data: data) { error in
-            if let error = error {
-                print("Error submitting report: \(error.localizedDescription)")
-            } else {
-                print("✅ Lost pet report submitted successfully.")
+        Firestore.firestore().collection(FS.LostPets.collection).addDocument(data: data) { error in
+            DispatchQueue.main.async {
+                isSubmitting = false
+                if let error = error {
+                    alertMessage = "Failed to submit: \(error.localizedDescription)"
+                    showAlert = true
+                } else {
+                    alertMessage = "Lost pet report submitted successfully."
+                    showAlert = true
+                    petName = ""
+                    petDescription = ""
+                    hasManuallySelectedLocation = false
+                }
             }
         }
     }
