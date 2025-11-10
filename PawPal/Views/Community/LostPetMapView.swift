@@ -34,23 +34,91 @@ struct LostPetMapView: View {
     @State private var hasCenteredOnUser = false
     
     var body: some View {
-        Map(position: $cameraPosition) {
-            ForEach(lostPets) { pet in
-                Marker(pet.petName, coordinate: CLLocationCoordinate2D(latitude: pet.latitude, longitude: pet.longitude))
+        ZStack(alignment: .topTrailing) {
+            //Map View
+            Map(position: $cameraPosition) {
+                //Display one marker per lost pet document in Firestore
+                ForEach(lostPets) { pet in
+                    Marker(
+                        pet.petName,
+                        coordinate: CLLocationCoordinate2D(
+                            latitude: pet.latitude,
+                            longitude: pet.longitude
+                        )
+                    )
+                }
+                
+                // Optional marker showing user’s own location if available
+                // not sure if i need the annotations but will help with debugging
+                if let userLocation = locationManager.location {
+                    Annotation("You are here", coordinate: userLocation.coordinate) {
+                        ZStack {
+                            Circle()
+                                .fill(Color.blue.opacity(0.25))
+                                .frame(width: 80, height: 80)
+                            Image(systemName: "mappin.circle.fill")
+                                .font(.system(size: 28))
+                                .foregroundColor(.blue)
+                        }
+                    }
+                }
+            }
+            // might remove this but testing what happens when we allow the view out of safe bounds
+            .ignoresSafeArea(edges: .bottom)
+            .navigationTitle("Lost Pets Map")
+            
+            
+            .onAppear {
+                // Begin location tracking (this function has not yet been implemented)
+                //                setupUserLocation()
+                // Start Firestore real-time listener
+                // get rid of perform so that we can run multiple functions
+                startListeningForLostPets()
             }
         }
-        .onAppear(perform: fetchLostPets)
-        .navigationTitle("Lost Pets Map")
     }
     
     
     
-    private func fetchLostPets() {
-        db.collection("lost_pets").getDocuments { snapshot, error in
-            guard let documents = snapshot?.documents else { return }
+    // original implementation for getting lost pets
+    //    private func fetchLostPets() {
+    //        db.collection("lost_pets").getDocuments { snapshot, error in
+    //            guard let documents = snapshot?.documents else { return }
+    //
+    //            self.lostPets = documents.compactMap { doc in
+    //                let data = doc.data()
+    //                guard
+    //                    let name = data["petName"] as? String,
+    //                    let desc = data["description"] as? String,
+    //                    let lat = data["lat"] as? Double,
+    //                    let lng = data["lng"] as? Double
+    //                else {
+    //                    return nil
+    //                }
+    //
+    //                return LostPet(id: doc.documentID, petName: name, description: desc, latitude: lat, longitude: lng)
+    //            }
+    //        }
+    //    }
+    
+    // fetches lost pets dynamically. The idea is that it will update immediately when another user adds a pet
+    private func startListeningForLostPets() {
+        db.collection("lost_pets").addSnapshotListener { snapshot, error in
+            if let error = error {
+                // checking for problems with my snapshotlistener
+                print("Firestore listener error: \(error.localizedDescription)")
+                return
+            }
             
+            guard let documents = snapshot?.documents else {
+                print("No lost pet documents found.")
+                return
+            }
+            
+            // Convert Firestore data into LostPet structs (reused from prior function)
             self.lostPets = documents.compactMap { doc in
                 let data = doc.data()
+                
                 guard
                     let name = data["petName"] as? String,
                     let desc = data["description"] as? String,
@@ -60,10 +128,25 @@ struct LostPetMapView: View {
                     return nil
                 }
                 
-                return LostPet(id: doc.documentID, petName: name, description: desc, latitude: lat, longitude: lng)
+                // added timestamp to show when the new pet was added (should be useful for urgency)
+                let timestamp = (data["timestamp"] as? Timestamp)?.dateValue()
+                
+                return LostPet(
+                    id: doc.documentID,
+                    petName: name,
+                    description: desc,
+                    latitude: lat,
+                    longitude: lng,
+                    timestamp: timestamp
+                )
             }
+            
+            // logging pets added for testing
+            print("Firestore updated — \(self.lostPets.count) pets loaded.")
         }
     }
+    
+    
 }
 
 #Preview {
