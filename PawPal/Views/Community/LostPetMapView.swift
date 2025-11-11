@@ -146,6 +146,48 @@ struct LostPetMapView: View {
         }
     }
     
+    //
+    private func setupUserLocation() {
+        // Case 1: If we already have a location from the LocationManager
+        if let userLocation = locationManager.location {
+            moveCameraToUserLocation(userLocation)
+        } else {
+            // Case 2: If we don’t yet have a location, wait briefly then check again
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                if let userLocation = locationManager.location {
+                    moveCameraToUserLocation(userLocation)
+                } else {
+                    // Case 3: Fallback if location is still unavailable (keep the San Fran origin)
+                    print(" User location unavailable, using default map center.")
+                    cameraPosition = .region(
+                        MKCoordinateRegion(
+                            center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194),
+                            span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
+                        )
+                    )
+                }
+            }
+        }
+    }
+    
+    // updates camera to center on user location
+    // ONLY ONCE (if you let it keep updating the map will keep updating the pin as location manager updates)
+    private func moveCameraToUserLocation(_ location: CLLocation) {
+        // Prevent recentering repeatedly (only do this the first time)
+        guard !hasCenteredOnUser else { return }
+        hasCenteredOnUser = true
+        
+        cameraPosition = .region(
+            MKCoordinateRegion(
+                center: location.coordinate,
+                span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
+            )
+        )
+        
+        // logging successful coordinate change
+        print("Map centered on user at \(location.coordinate.latitude), \(location.coordinate.longitude)")
+    }
+    
     
 }
 
