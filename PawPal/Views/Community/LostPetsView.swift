@@ -18,6 +18,18 @@ struct LostPetsView: View {
     @State private var isLoading = false 
     @State private var showAlert = false 
     @State private var alertMessage = ""
+    @State private var searchText = ""
+
+    private var filteredPets: [LostPet] {
+        let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+        if query.isEmpty {
+            return lostPets
+        }
+        return lostPets.filter { pet in
+            pet.petName.localizedCaseInsensitiveContains(query) ||
+            pet.description.localizedCaseInsensitiveContains(query)
+        }
+    }
 
     var body: some View {
         NavigationStack {
@@ -47,7 +59,7 @@ struct LostPetsView: View {
                 } else {
                     ScrollView {
                         LazyVStack {
-                            ForEach(lostPets) { pet in
+                            ForEach(filteredPets) { pet in
                                 NavigationLink(destination: LostPetDetailView(pet: pet)) {
                                     LostPetRow(pet: pet)
                                 }
@@ -61,16 +73,22 @@ struct LostPetsView: View {
                     }
                 }
             }
-            .navigationTitle("Lost Pets")
             .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Text("Lost Pets")
+                        .font(.headline)
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Logout") {
+                    Button(action: {
                         logout()
+                    }) {
+                        Text("Logout")
                     }
                     .foregroundColor(.red)
                 }
             }
             .onAppear(perform: fetchLostPets)
+            .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .automatic), prompt: "Search by name or description")
         }
         .alert("Oops", isPresented: $showAlert) {
             Button("OK", role: .cancel) { }
@@ -110,12 +128,12 @@ struct LostPetsView: View {
                             return nil
                         }
 
-                    let timestamp = (data[FS.LostPets.timestamp] as? Timestamp)?.dateValue()
+                        let timestamp = (data[FS.LostPets.timestamp] as? Timestamp)?.dateValue()
 
-                    return LostPet(id: doc.documentID, petName: name, description: desc, latitude: lat, longitude: lng, timestamp: timestamp)
+                        return LostPet(id: doc.documentID, petName: name, description: desc, latitude: lat, longitude: lng, timestamp: timestamp)
+                    }
                 }
             }
-        }
     }
 
     private func logout() {
