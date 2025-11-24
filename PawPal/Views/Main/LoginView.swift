@@ -23,48 +23,53 @@ struct LoginView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 16) {
-                TextField("Email", text: $email)
-                    .textFieldStyle(.roundedBorder)
-                    .autocapitalization(.none)
+            ScrollView {
+                VStack(spacing: 16) {
+                    Spacer(minLength: 50)
 
-                SecureField("Password", text: $password)
-                    .textFieldStyle(.roundedBorder)
+                    Text("Login")
+                        .font(.largeTitle)
+                        .bold()
 
-                if let error = errorMessage {
-                    Text(error)
-                        .foregroundColor(.red)
-                }
+                    TextField("Email", text: $email)
+                        .textFieldStyle(.roundedBorder)
+                        .autocapitalization(.none)
 
-                Button("Login with Email") {
-                    loginWithEmail()
-                }
-                .buttonStyle(.borderedProminent)
+                    SecureField("Password", text: $password)
+                        .textFieldStyle(.roundedBorder)
 
-                GoogleSignInButton {
-                    googleLogin()
+                    if let error = errorMessage {
+                        Text(error)
+                            .foregroundColor(.red)
+                    }
+
+                    Button("Login with Email") {
+                        loginWithEmail()
+                    }
+                    .buttonStyle(.borderedProminent)
+
+                    GoogleSignInButton {
+                        googleLogin()
+                    }
+                    .frame(height: 44)
+
+                    Button("Don't have an account? Register") {
+                        navigateToRegister = true
+                    }
+
+                    Spacer(minLength: 50)
                 }
-                .frame(height: 44)
-                
-                Button("Don't have an account? Register") {
-                    navigateToRegister = true
-                }
-                
-                .navigationDestination(isPresented: $navigateToProfileSetup) {
-                    EnterProfileView()
-                }
-                 
-                .navigationDestination(isPresented: $navigateToMainApp) {
-                    //MainAppView()
-                    MainTabView()
-                }
-                
-                .navigationDestination(isPresented: $navigateToRegister) {
-                    RegisterView()
-                }
+                .padding()
             }
-            .padding()
-            .navigationTitle("Login")
+            .navigationDestination(isPresented: $navigateToProfileSetup) {
+                EnterProfileView()
+            }
+            .navigationDestination(isPresented: $navigateToMainApp) {
+                MainAppView()
+            }
+            .navigationDestination(isPresented: $navigateToRegister) {
+                RegisterView()
+            }
         }
     }
 
@@ -79,8 +84,7 @@ struct LoginView: View {
                 errorMessage = error.localizedDescription
                 return
             }
-            //checkUserProfileExists()
-            navigateToMainApp = true
+            checkUserProfileExists()
         }
     }
 
@@ -119,8 +123,7 @@ struct LoginView: View {
                     return
                 }
 
-                //checkUserProfileExists()
-                navigateToMainApp = true 
+                checkUserProfileExists()
             }
         }
     }

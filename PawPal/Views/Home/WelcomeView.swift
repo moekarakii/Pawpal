@@ -10,7 +10,6 @@ import SwiftUI
 
 struct WelcomeView: View {
     var body: some View {
-        NavigationStack {
             VStack(spacing: 32) {
                 Text("🐾 Welcome to PawPal")
                     .font(.largeTitle)
@@ -28,13 +27,11 @@ struct WelcomeView: View {
                         .padding()
                         .background(Color.blue)
                         .foregroundColor(.white)
-                        .cornerRadius(12)
                 }
                 .padding(.horizontal)
             }
             .frame(maxHeight: .infinity, alignment: .top)
             .padding()
-        }
     }
 }
 
