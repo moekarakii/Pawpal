@@ -5,7 +5,6 @@
 //  Created by Juan Zavala  on 8/17/25.
 //
 
-// LostPetMapView.swift
 import SwiftUI
 import MapKit
 import Firebase
@@ -23,21 +22,24 @@ struct LostPetMapView: View {
     
     // array of lost pets fetched from data base (init)
     @State private var lostPets: [LostPet] = []
+    @State private var isLoading = false
+    @State private var showAlert = false
+    @State private var alertMessage = ""
     
-    // A shared Firestore reference to make it more intuitave for reuse
+    // A shared Firestore reference to make it more intuitive for reuse
     private let db = Firestore.firestore()
     
     // LocationManager object manages access to CoreLocation updates
     @StateObject private var locationManager = LocationManager()
     
-    // Used to confirm when we’ve successfully centered on the user
+    // Used to confirm when we've successfully centered on the user
     @State private var hasCenteredOnUser = false
-    
+
     var body: some View {
         ZStack(alignment: .topTrailing) {
-            //Map View
+            // Map View
             Map(position: $cameraPosition) {
-                //Display one marker per lost pet document in Firestore
+                // Display one marker per lost pet document in Firestore
                 ForEach(lostPets) { pet in
                     Marker(
                         pet.petName,
@@ -48,8 +50,7 @@ struct LostPetMapView: View {
                     )
                 }
                 
-                // Optional marker showing user’s own location if available
-                // not sure if i need the annotations but will help with debugging
+                // Optional marker showing user's own location if available
                 if let userLocation = locationManager.location {
                     Annotation("You are here", coordinate: userLocation.coordinate) {
                         ZStack {
@@ -63,73 +64,74 @@ struct LostPetMapView: View {
                     }
                 }
             }
-            // might remove this but testing what happens when we allow the view out of safe bounds
             .ignoresSafeArea(edges: .bottom)
             .navigationTitle("Lost Pets Map")
-            
-            
-            .onAppear {
-                // Begin location tracking (this function has not yet been implemented)
-                //                setupUserLocation()
-                // Start Firestore real-time listener
-                // get rid of perform so that we can run multiple functions
-                startListeningForLostPets()
+
+            // Loading indicator
+            if isLoading {
+                ProgressView("Loading nearby reports...")
+                    .padding()
+                    .background(.ultraThinMaterial)
+                    .cornerRadius(12)
+            }
+
+            // Empty state message
+            if !isLoading && lostPets.isEmpty {
+                VStack(spacing: 8) {
+                    Text("No reports on the map yet")
+                        .font(.headline)
+                    Text("When lost pets are reported, they will show up here.")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+                .padding()
             }
         }
+        .onAppear {
+            setupUserLocation()
+            startListeningForLostPets()
+        }
+        .alert("Error", isPresented: $showAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text(alertMessage)
+        }
     }
-    
-    
-    
-    // original implementation for getting lost pets
-    //    private func fetchLostPets() {
-    //        db.collection("lost_pets").getDocuments { snapshot, error in
-    //            guard let documents = snapshot?.documents else { return }
-    //
-    //            self.lostPets = documents.compactMap { doc in
-    //                let data = doc.data()
-    //                guard
-    //                    let name = data["petName"] as? String,
-    //                    let desc = data["description"] as? String,
-    //                    let lat = data["lat"] as? Double,
-    //                    let lng = data["lng"] as? Double
-    //                else {
-    //                    return nil
-    //                }
-    //
-    //                return LostPet(id: doc.documentID, petName: name, description: desc, latitude: lat, longitude: lng)
-    //            }
-    //        }
-    //    }
-    
-    // fetches lost pets dynamically. The idea is that it will update immediately when another user adds a pet
+
+    // Fetches lost pets dynamically with real-time updates
     private func startListeningForLostPets() {
-        db.collection("lost_pets").addSnapshotListener { snapshot, error in
+        isLoading = true
+        
+        db.collection(FS.LostPets.collection).addSnapshotListener { snapshot, error in
+            isLoading = false
+            
             if let error = error {
-                // checking for problems with my snapshotlistener
+                alertMessage = "Failed to load lost pets: \(error.localizedDescription)"
+                showAlert = true
                 print("Firestore listener error: \(error.localizedDescription)")
                 return
             }
             
             guard let documents = snapshot?.documents else {
                 print("No lost pet documents found.")
+                self.lostPets = []
                 return
             }
             
-            // Convert Firestore data into LostPet structs (reused from prior function)
+            // Convert Firestore data into LostPet structs
             self.lostPets = documents.compactMap { doc in
                 let data = doc.data()
                 
                 guard
-                    let name = data["petName"] as? String,
-                    let desc = data["description"] as? String,
-                    let lat = data["lat"] as? Double,
-                    let lng = data["lng"] as? Double
+                    let name = data[FS.LostPets.petName] as? String,
+                    let desc = data[FS.LostPets.description] as? String,
+                    let lat = data[FS.LostPets.lat] as? Double,
+                    let lng = data[FS.LostPets.lng] as? Double
                 else {
                     return nil
                 }
                 
-                // added timestamp to show when the new pet was added (should be useful for urgency)
-                let timestamp = (data["timestamp"] as? Timestamp)?.dateValue()
+                let timestamp = (data[FS.LostPets.timestamp] as? Timestamp)?.dateValue()
                 
                 return LostPet(
                     id: doc.documentID,
@@ -141,37 +143,28 @@ struct LostPetMapView: View {
                 )
             }
             
-            // logging pets added for testing
             print("Firestore updated — \(self.lostPets.count) pets loaded.")
         }
     }
     
-    //
     private func setupUserLocation() {
         // Case 1: If we already have a location from the LocationManager
         if let userLocation = locationManager.location {
             moveCameraToUserLocation(userLocation)
         } else {
-            // Case 2: If we don’t yet have a location, wait briefly then check again
+            // Case 2: If we don't yet have a location, wait briefly then check again
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                 if let userLocation = locationManager.location {
                     moveCameraToUserLocation(userLocation)
                 } else {
                     // Case 3: Fallback if location is still unavailable (keep the San Fran origin)
-                    print(" User location unavailable, using default map center.")
-                    cameraPosition = .region(
-                        MKCoordinateRegion(
-                            center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194),
-                            span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
-                        )
-                    )
+                    print("User location unavailable, using default map center.")
                 }
             }
         }
     }
     
-    // updates camera to center on user location
-    // ONLY ONCE (if you let it keep updating the map will keep updating the pin as location manager updates)
+    // Updates camera to center on user location ONLY ONCE
     private func moveCameraToUserLocation(_ location: CLLocation) {
         // Prevent recentering repeatedly (only do this the first time)
         guard !hasCenteredOnUser else { return }
@@ -184,11 +177,8 @@ struct LostPetMapView: View {
             )
         )
         
-        // logging successful coordinate change
         print("Map centered on user at \(location.coordinate.latitude), \(location.coordinate.longitude)")
     }
-    
-    
 }
 
 #Preview {

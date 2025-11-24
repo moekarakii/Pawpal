@@ -203,7 +203,12 @@ struct LoginView: View {
     private func checkUserProfileExists() {
         guard let userId = Auth.auth().currentUser?.uid else { return }
 
-        Firestore.firestore().collection("users").document(userId).getDocument { document, error in
+        Firestore.firestore().collection(FS.Users.collection).document(userId).getDocument { document, error in
+            if let error = error {
+                errorMessage = "Failed to load profile: \(error.localizedDescription)"
+                return
+            }
+
             if let document = document, document.exists {
                 navigateToMainApp = true
             } else {

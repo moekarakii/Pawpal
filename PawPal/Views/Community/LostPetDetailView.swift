@@ -11,6 +11,18 @@ import MapKit
 struct LostPetDetailView: View {
     let pet: LostPet
 
+    private var region: MKCoordinateRegion? {
+        guard (-90.0...90.0).contains(pet.latitude),
+              (-180.0...180.0).contains(pet.longitude) else {
+            return nil
+        }
+
+        return MKCoordinateRegion(
+            center: CLLocationCoordinate2D(latitude: pet.latitude, longitude: pet.longitude),
+            span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+        )
+    }
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
@@ -25,18 +37,23 @@ struct LostPetDetailView: View {
                     Text("Reported on \(formatted(date: date))")
                         .font(.caption)
                         .foregroundColor(.gray)
+                } else {
+                    Text("Reported time not available")
+                        .font(.caption)
+                        .foregroundColor(.gray)
                 }
 
-                Map(initialPosition: .region(
-                    MKCoordinateRegion(
-                        center: CLLocationCoordinate2D(latitude: pet.latitude, longitude: pet.longitude),
-                        span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
-                    )
-                )) {
-                    Marker(pet.petName, coordinate: CLLocationCoordinate2D(latitude: pet.latitude, longitude: pet.longitude))
+                if let region = region {
+                    Map(initialPosition: .region(region)) {
+                        Marker(pet.petName, coordinate: CLLocationCoordinate2D(latitude: pet.latitude, longitude: pet.longitude))
+                    }
+                    .frame(height: 250)
+                    .cornerRadius(12)
+                } else {
+                    Text("Location unavailable for this report")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
                 }
-                .frame(height: 250)
-                .cornerRadius(12)
             }
             .padding()
         }
