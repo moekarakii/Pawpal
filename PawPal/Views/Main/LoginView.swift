@@ -20,52 +20,113 @@ struct LoginView: View {
     @State private var navigateToProfileSetup = false
     @State private var navigateToMainApp = false
     @State private var navigateToRegister = false 
+    @State private var logoScale = 0.8
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(spacing: 16) {
-                    Spacer(minLength: 50)
+            ZStack {
+                // Background gradient
+                LinearGradient(
+                    gradient: Gradient(colors: [
+                        Color.blue.opacity(0.05),
+                        Color.purple.opacity(0.02),
+                        Color.white
+                    ]),
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+                .ignoresSafeArea()
+                
+                ScrollView {
+                    VStack(spacing: 30) {
+                        Spacer(minLength: 60)
 
-                    Text("Login")
-                        .font(.largeTitle)
-                        .bold()
+                        // PawPal Logo
+                        PawPalLogo(size: 100, showText: true)
+                            .scaleEffect(logoScale)
+                            .onAppear {
+                                withAnimation(.spring(response: 1.0, dampingFraction: 0.7)) {
+                                    logoScale = 1.0
+                                }
+                            }
 
-                    TextField("Email", text: $email)
-                        .textFieldStyle(.roundedBorder)
-                        .autocapitalization(.none)
+                        // Welcome back text
+                        VStack(spacing: 8) {
+                            Text("Welcome Back!")
+                                .font(.title)
+                                .fontWeight(.bold)
+                                .foregroundColor(.primary)
+                            
+                            Text("Sign in to continue helping pets find their way home")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                                .multilineTextAlignment(.center)
+                                .padding(.horizontal)
+                        }
 
-                    SecureField("Password", text: $password)
-                        .textFieldStyle(.roundedBorder)
+                        // Form fields
+                        VStack(spacing: 16) {
+                            TextField("Email", text: $email)
+                                .textFieldStyle(.roundedBorder)
+                                .autocapitalization(.none)
+                                .keyboardType(.emailAddress)
 
-                    if let error = errorMessage {
-                        Text(error)
-                            .foregroundColor(.red)
+                            SecureField("Password", text: $password)
+                                .textFieldStyle(.roundedBorder)
+
+                            if let error = errorMessage {
+                                Text(error)
+                                    .foregroundColor(.red)
+                                    .font(.caption)
+                                    .multilineTextAlignment(.center)
+                            }
+                        }
+                        .padding(.horizontal, 20)
+
+                        // Login buttons
+                        VStack(spacing: 16) {
+                            Button("Sign In") {
+                                loginWithEmail()
+                            }
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 50)
+                            .background(
+                                LinearGradient(
+                                    gradient: Gradient(colors: [Color.blue, Color.purple.opacity(0.8)]),
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                )
+                            )
+                            .foregroundColor(.white)
+                            .fontWeight(.semibold)
+                            .cornerRadius(25)
+                            .shadow(color: .blue.opacity(0.3), radius: 5, x: 0, y: 3)
+
+                            GoogleSignInButton {
+                                googleLogin()
+                            }
+                            .frame(height: 50)
+                            .cornerRadius(25)
+                            .shadow(color: .gray.opacity(0.3), radius: 5, x: 0, y: 3)
+                        }
+                        .padding(.horizontal, 20)
+
+                        // Register link
+                        Button("Don't have an account? Create one") {
+                            navigateToRegister = true
+                        }
+                        .foregroundColor(.blue)
+                        .fontWeight(.medium)
+
+                        Spacer(minLength: 40)
                     }
-
-                    Button("Login with Email") {
-                        loginWithEmail()
-                    }
-                    .buttonStyle(.borderedProminent)
-
-                    GoogleSignInButton {
-                        googleLogin()
-                    }
-                    .frame(height: 44)
-
-                    Button("Don't have an account? Register") {
-                        navigateToRegister = true
-                    }
-
-                    Spacer(minLength: 50)
                 }
-                .padding()
             }
             .navigationDestination(isPresented: $navigateToProfileSetup) {
                 EnterProfileView()
             }
             .navigationDestination(isPresented: $navigateToMainApp) {
-                MainAppView()
+                MainTabView()
             }
             .navigationDestination(isPresented: $navigateToRegister) {
                 RegisterView()

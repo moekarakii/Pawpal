@@ -37,6 +37,8 @@
 		A27BC4E52E1E158500A03862 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = A27BC4E42E1E158500A03862 /* FirebaseAuth */; };
 		A27BC4E72E1E158500A03862 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = A27BC4E62E1E158500A03862 /* FirebaseCore */; };
 		A27BC4E92E1E158500A03862 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = A27BC4E82E1E158500A03862 /* FirebaseFirestore */; };
+		A29478C52ED4405E00B94BE7 /* PawPalLogo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29478C42ED4405E00B94BE7 /* PawPalLogo.swift */; };
+		A29478C62ED4405E00B94BE7 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29478C32ED4405E00B94BE7 /* LoadingView.swift */; };
 		AD66E5702D35B5DC00995985 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD66E56F2D35B5D500995985 /* AuthService.swift */; };
 /* End PBXBuildFile section */
 
@@ -67,6 +69,8 @@
 		A22102C22E2B111800103E28 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		A22102C42E2B121800103E28 /* PawPal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PawPal.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A27B1BC42E4ACC2500D67D57 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		A29478C32ED4405E00B94BE7 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
+		A29478C42ED4405E00B94BE7 /* PawPalLogo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PawPalLogo.swift; sourceTree = "<group>"; };
 		AD66E56F2D35B5D500995985 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -183,6 +187,8 @@
 		A22102BC2E2B061500103E28 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				A29478C32ED4405E00B94BE7 /* LoadingView.swift */,
+				A29478C42ED4405E00B94BE7 /* PawPalLogo.swift */,
 				A22102C22E2B111800103E28 /* ImagePicker.swift */,
 				A22102AE2E2AF86000103E28 /* FlowLayout.swift */,
 			);
@@ -280,6 +286,8 @@
 				9C90A8E72E597E9A0063C4BC /* LostPetDetailView.swift in Sources */,
 				A22102B22E2AFA5200103E28 /* RegisterView.swift in Sources */,
 				9B165F3C2CBB40B200BC8DB2 /* MapView.swift in Sources */,
+				A29478C52ED4405E00B94BE7 /* PawPalLogo.swift in Sources */,
+				A29478C62ED4405E00B94BE7 /* LoadingView.swift in Sources */,
 				9C90A8E12E593D860063C4BC /* MainTabView.swift in Sources */,
 				9CD26B992E4C018A0004CB4D /* LostPetReportView.swift in Sources */,
 				AD66E5702D35B5DC00995985 /* AuthService.swift in Sources */,

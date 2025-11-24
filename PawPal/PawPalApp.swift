@@ -10,15 +10,31 @@ import Firebase
 @main
 struct PawPalApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    @State private var isLoading = true
 
     var body: some Scene {
         WindowGroup {
             ZStack {
                 Color(.systemBackground)
-                    .ignoresSafeArea() // fills the entire screen, notch to home bar
-                NavigationStack {
-                    WelcomeView()
-                    VCInspector()
+                    .ignoresSafeArea()
+                
+                if isLoading {
+                    LoadingView()
+                        .transition(.opacity)
+                } else {
+                    NavigationStack {
+                        WelcomeView()
+                        VCInspector()
+                    }
+                    .transition(.opacity)
+                }
+            }
+            .onAppear {
+                // Show loading screen for 2.5 seconds
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+                    withAnimation(.easeInOut(duration: 0.8)) {
+                        isLoading = false
+                    }
                 }
             }
         }
