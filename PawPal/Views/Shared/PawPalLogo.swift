@@ -31,20 +31,9 @@ struct PawPalLogo: View {
                     .frame(width: size, height: size)
                     .shadow(color: .black.opacity(0.2), radius: 10, x: 0, y: 5)
                 
-                // Paw prints
-                VStack(spacing: -8) {
-                    HStack(spacing: 8) {
-                        PawPrint(size: size * 0.15)
-                        PawPrint(size: size * 0.18)
-                    }
-                    .offset(y: -size * 0.1)
-                    
-                    HStack(spacing: 12) {
-                        PawPrint(size: size * 0.16)
-                        PawPrint(size: size * 0.17)
-                    }
-                    .offset(y: size * 0.05)
-                }
+                // Single paw emoji centered
+                Text("🐾")
+                    .font(.system(size: size * 0.4))
             }
             
             if showText {
@@ -60,35 +49,6 @@ struct PawPalLogo: View {
                 }
             }
         }
-    }
-}
-
-struct PawPrint: View {
-    let size: CGFloat
-    
-    var body: some View {
-        VStack(spacing: size * 0.1) {
-            // Toe pads
-            HStack(spacing: size * 0.15) {
-                Circle()
-                    .fill(Color.white)
-                    .frame(width: size * 0.3, height: size * 0.4)
-                
-                Circle()
-                    .fill(Color.white)
-                    .frame(width: size * 0.35, height: size * 0.45)
-                
-                Circle()
-                    .fill(Color.white)
-                    .frame(width: size * 0.3, height: size * 0.4)
-            }
-            
-            // Main pad
-            Ellipse()
-                .fill(Color.white)
-                .frame(width: size * 0.6, height: size * 0.5)
-        }
-        .frame(width: size, height: size)
     }
 }
 

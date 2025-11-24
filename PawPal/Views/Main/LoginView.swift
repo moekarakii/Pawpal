@@ -37,88 +37,99 @@ struct LoginView: View {
                 )
                 .ignoresSafeArea()
                 
-                ScrollView {
-                    VStack(spacing: 30) {
-                        Spacer(minLength: 60)
+                GeometryReader { geometry in
+                    ScrollView {
+                        VStack(spacing: 0) {
+                            Spacer(minLength: geometry.size.height * 0.05)
 
-                        // PawPal Logo
-                        PawPalLogo(size: 100, showText: true)
-                            .scaleEffect(logoScale)
-                            .onAppear {
-                                withAnimation(.spring(response: 1.0, dampingFraction: 0.7)) {
-                                    logoScale = 1.0
+                            // PawPal Logo - moved up higher
+                            PawPalLogo(size: 85, showText: true)
+                                .scaleEffect(logoScale)
+                                .onAppear {
+                                    withAnimation(.spring(response: 1.0, dampingFraction: 0.7)) {
+                                        logoScale = 1.0
+                                    }
+                                }
+
+                            Spacer(minLength: geometry.size.height * 0.08)
+
+                            // Welcome back text - centered with better spacing
+                            VStack(spacing: 8) {
+                                Text("Welcome Back!")
+                                    .font(.title)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(.primary)
+                                
+                                Text("Sign in to continue helping pets find their way home")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                                    .multilineTextAlignment(.center)
+                                    .padding(.horizontal, 20)
+                                    .lineLimit(2)
+                            }
+
+                            Spacer(minLength: geometry.size.height * 0.06)
+
+                            // Form fields
+                            VStack(spacing: 16) {
+                                TextField("Email", text: $email)
+                                    .textFieldStyle(.roundedBorder)
+                                    .autocapitalization(.none)
+                                    .keyboardType(.emailAddress)
+
+                                SecureField("Password", text: $password)
+                                    .textFieldStyle(.roundedBorder)
+
+                                if let error = errorMessage {
+                                    Text(error)
+                                        .foregroundColor(.red)
+                                        .font(.caption)
+                                        .multilineTextAlignment(.center)
                                 }
                             }
+                            .padding(.horizontal, 20)
 
-                        // Welcome back text
-                        VStack(spacing: 8) {
-                            Text("Welcome Back!")
-                                .font(.title)
-                                .fontWeight(.bold)
-                                .foregroundColor(.primary)
-                            
-                            Text("Sign in to continue helping pets find their way home")
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
-                                .multilineTextAlignment(.center)
-                                .padding(.horizontal)
-                        }
+                            Spacer(minLength: geometry.size.height * 0.05)
 
-                        // Form fields
-                        VStack(spacing: 16) {
-                            TextField("Email", text: $email)
-                                .textFieldStyle(.roundedBorder)
-                                .autocapitalization(.none)
-                                .keyboardType(.emailAddress)
-
-                            SecureField("Password", text: $password)
-                                .textFieldStyle(.roundedBorder)
-
-                            if let error = errorMessage {
-                                Text(error)
-                                    .foregroundColor(.red)
-                                    .font(.caption)
-                                    .multilineTextAlignment(.center)
-                            }
-                        }
-                        .padding(.horizontal, 20)
-
-                        // Login buttons
-                        VStack(spacing: 16) {
-                            Button("Sign In") {
-                                loginWithEmail()
-                            }
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 50)
-                            .background(
-                                LinearGradient(
-                                    gradient: Gradient(colors: [Color.blue, Color.purple.opacity(0.8)]),
-                                    startPoint: .leading,
-                                    endPoint: .trailing
+                            // Login buttons
+                            VStack(spacing: 16) {
+                                Button("Sign In") {
+                                    loginWithEmail()
+                                }
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 50)
+                                .background(
+                                    LinearGradient(
+                                        gradient: Gradient(colors: [Color.blue, Color.purple.opacity(0.8)]),
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    )
                                 )
-                            )
-                            .foregroundColor(.white)
-                            .fontWeight(.semibold)
-                            .cornerRadius(25)
-                            .shadow(color: .blue.opacity(0.3), radius: 5, x: 0, y: 3)
+                                .foregroundColor(.white)
+                                .fontWeight(.semibold)
+                                .cornerRadius(25)
+                                .shadow(color: .blue.opacity(0.3), radius: 5, x: 0, y: 3)
 
-                            GoogleSignInButton {
-                                googleLogin()
+                                GoogleSignInButton {
+                                    googleLogin()
+                                }
+                                .frame(height: 50)
+                                .cornerRadius(25)
+                                .shadow(color: .gray.opacity(0.3), radius: 5, x: 0, y: 3)
                             }
-                            .frame(height: 50)
-                            .cornerRadius(25)
-                            .shadow(color: .gray.opacity(0.3), radius: 5, x: 0, y: 3)
-                        }
-                        .padding(.horizontal, 20)
+                            .padding(.horizontal, 20)
 
-                        // Register link
-                        Button("Don't have an account? Create one") {
-                            navigateToRegister = true
-                        }
-                        .foregroundColor(.blue)
-                        .fontWeight(.medium)
+                            Spacer(minLength: geometry.size.height * 0.04)
 
-                        Spacer(minLength: 40)
+                            // Register link
+                            Button("Don't have an account? Create one") {
+                                navigateToRegister = true
+                            }
+                            .foregroundColor(.blue)
+                            .fontWeight(.medium)
+
+                            Spacer(minLength: geometry.size.height * 0.08)
+                        }
                     }
                 }
             }
