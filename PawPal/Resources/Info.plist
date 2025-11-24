@@ -20,17 +20,14 @@
 
     <key>CFBundleIdentifier</key>
     <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-
     <key>CFBundleShortVersionString</key>
     <string>1.0</string>
     <key>CFBundleVersion</key>
     <string>1</string>
     <key>CFBundleName</key>
     <string>PawPal</string>
-
     <key>CFBundleExecutable</key>
     <string>$(EXECUTABLE_NAME)</string>
-
     <key>CFBundleURLTypes</key>
     <array>
         <dict>
@@ -42,26 +39,14 @@
             </array>
         </dict>
     </array>
-
     <key>GIDClientID</key>
     <string>690844706596-1utlt8pnb6iseqhhljctv0b2go6o78on.apps.googleusercontent.com</string>
-
-    <key>UIApplicationSceneManifest</key>
+    <key>UILaunchScreen</key>
     <dict>
-        <key>UIApplicationSupportsMultipleScenes</key>
-        <false/>
-        <key>UISceneConfigurations</key>
-        <dict>
-            <key>UIWindowSceneSessionRoleApplication</key>
-            <array>
-                <dict>
-                    <key>UISceneConfigurationName</key>
-                    <string>Default Configuration</string>
-                    <key>UISceneDelegateClassName</key>
-                    <string>$(PRODUCT_MODULE_NAME).SceneDelegate</string>
-                </dict>
-            </array>
-        </dict>
+        <key>UIColorName</key>
+        <string>AccentColor</string>
+        <key>UIImageName</key>
+        <string></string>
     </dict>
 
 </dict>
