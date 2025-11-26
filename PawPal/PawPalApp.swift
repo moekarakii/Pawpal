@@ -4,6 +4,7 @@
 //
 //  Created by Moe Karaki on 7/18/25.
 //
+
 import SwiftUI
 import Firebase
 
@@ -12,7 +13,7 @@ struct PawPalApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
 
     @StateObject private var locationManager = LocationManager()
-    @State private var isLoading = true
+    @StateObject private var authVM = AuthViewModel()
 
     var body: some Scene {
         WindowGroup {
@@ -20,30 +21,35 @@ struct PawPalApp: App {
                 Color(.systemBackground)
                     .ignoresSafeArea()
 
-                if isLoading {
+                // 1. Firebase is still checking for an existing session
+                if authVM.isLoading {
                     LoadingView()
-                        .transition(.opacity)
-                } else {
+                }
+
+                // 2. Not logged in = show Welcome
+                else if authVM.user == nil {
                     NavigationStack {
                         WelcomeView()
-                        VCInspector()
                     }
-                    .transition(.opacity)
                     .environmentObject(locationManager)
+                    .transition(.opacity)
+                }
+
+                // 3. Logged in = show MainTabView
+                else {
+                    NavigationStack {
+                        MainTabView()
+                    }
+                    .environmentObject(locationManager)
+                    .transition(.opacity)
                 }
             }
             .task {
                 locationManager.requestLocationPermission()
             }
-            .onAppear {
-                withAnimation(.easeInOut(duration: 0.5)) {
-                    isLoading = false
-                }
-            }
         }
     }
 }
-
 
 struct VCInspector: View {
     var body: some View {
@@ -65,3 +71,4 @@ struct VCInspector: View {
         }
     }
 }
+

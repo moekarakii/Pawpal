@@ -2,24 +2,39 @@
 //  MainTabView.swift
 //  PawPal
 //
-//  Created by Juan Zavala  on 8/17/25.
+//  Created by Juan Zavala on 8/17/25.
 //
-
-// MainTabView.swift
+//  This view is the main tab bar container shown after the user successfully logs in.
+//  It holds the three primary sections of the app: Browse (LostPetsView),
+//  Map (LostPetMapView), and Report (LostPetReportView).
+//  A logout button is provided in the navigation bar of the Browse tab.
+//
 
 import SwiftUI
 import FirebaseAuth
 
 struct MainTabView: View {
+    
+    // Inject global authentication state.
+    // This allows this view (and others) to call `authVM.signOut()`
+    // which cleanly logs out the user and resets the app's root view.
+    @EnvironmentObject var authVM: AuthViewModel
+
+    //Don't think we need this anymore
     @Environment(\.dismiss) var dismiss
 
     var body: some View {
         TabView {
+
+           
+            // Browse Tab (Lost Pets List)
+            // Contains a logout button that uses the global
+            // AuthViewModel instead of local logout logic.
             LostPetsView()
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button("Logout") {
-                            logout()
+                            authVM.signOut()
                         }
                         .foregroundColor(.red)
                     }
@@ -28,24 +43,17 @@ struct MainTabView: View {
                     Label("Browse", systemImage: "list.bullet")
                 }
 
+            // Map Tab
             LostPetMapView()
                 .tabItem {
                     Label("Map", systemImage: "map")
                 }
 
+            // Report Tab
             LostPetReportView()
                 .tabItem {
                     Label("Report", systemImage: "plus.circle")
                 }
-        }
-    }
-
-    private func logout() {
-        do {
-            try Auth.auth().signOut()
-            dismiss() // This pops MainTabView off the stack
-        } catch {
-            print("Error signing out: \(error.localizedDescription)")
         }
     }
 }
@@ -53,4 +61,3 @@ struct MainTabView: View {
 #Preview {
     MainTabView()
 }
-
