@@ -10,6 +10,8 @@ import Firebase
 @main
 struct PawPalApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+
+    @StateObject private var locationManager = LocationManager()
     @State private var isLoading = true
 
     var body: some Scene {
@@ -17,7 +19,7 @@ struct PawPalApp: App {
             ZStack {
                 Color(.systemBackground)
                     .ignoresSafeArea()
-                
+
                 if isLoading {
                     LoadingView()
                         .transition(.opacity)
@@ -27,19 +29,21 @@ struct PawPalApp: App {
                         VCInspector()
                     }
                     .transition(.opacity)
+                    .environmentObject(locationManager)
                 }
             }
+            .task {
+                locationManager.requestLocationPermission()
+            }
             .onAppear {
-                // Show loading screen for 2.5 seconds
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
-                    withAnimation(.easeInOut(duration: 0.8)) {
-                        isLoading = false
-                    }
+                withAnimation(.easeInOut(duration: 0.5)) {
+                    isLoading = false
                 }
             }
         }
     }
 }
+
 
 struct VCInspector: View {
     var body: some View {

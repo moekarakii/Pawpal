@@ -10,6 +10,7 @@ import MapKit
 import Firebase
 
 struct LostPetMapView: View {
+    @EnvironmentObject var locationManager: LocationManager
     
     // This starts our default location centered on San Francisco
     // Want to replace it with the user's location data if available
@@ -30,7 +31,7 @@ struct LostPetMapView: View {
     private let db = Firestore.firestore()
     
     // LocationManager object manages access to CoreLocation updates
-    @StateObject private var locationManager = LocationManager()
+    
     
     // Used to confirm when we've successfully centered on the user
     @State private var hasCenteredOnUser = false
