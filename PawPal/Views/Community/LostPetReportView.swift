@@ -105,7 +105,8 @@ struct LostPetReportView: View {
                     }
                 }
                 .onReceive(locationManager.$location) { _ in
-                    print("📍 Location changed to: \(String(describing: locationManager.location?.coordinate))")
+                    // is pinging every frame
+//                    print("📍 Location changed to: \(String(describing: locationManager.location?.coordinate))")
                     if !hasManuallySelectedLocation, let coord = locationManager.location?.coordinate {
                         setCameraAndPin(to: coord)
                     }

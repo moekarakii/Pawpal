@@ -2,52 +2,37 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app needs your location to show your position on the map.</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>Google Sign on</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.598052271670-mg3md1m9u70v3puskf2u044lfbm0frjb</string>
+				<string>com.googleusercontent.apps.690844706596-1utlt8pnb6iseqhhljctv0b2go6o78on</string>
 			</array>
 		</dict>
 	</array>
 	<key>GIDClientID</key>
-	<string>598052271670-mg3md1m9u70v3puskf2u044lfbm0frjb.apps.googleusercontent.com</string>
-
-    <key>CFBundleIdentifier</key>
-    <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-    <key>CFBundleShortVersionString</key>
-    <string>1.0</string>
-    <key>CFBundleVersion</key>
-    <string>1</string>
-    <key>CFBundleName</key>
-    <string>PawPal</string>
-    <key>CFBundleExecutable</key>
-    <string>$(EXECUTABLE_NAME)</string>
-    <key>CFBundleURLTypes</key>
-    <array>
-        <dict>
-            <key>CFBundleTypeRole</key>
-            <string>Editor</string>
-            <key>CFBundleURLSchemes</key>
-            <array>
-                <string>com.googleusercontent.apps.690844706596-1utlt8pnb6iseqhhljctv0b2go6o78on</string>
-            </array>
-        </dict>
-    </array>
-    <key>GIDClientID</key>
-    <string>690844706596-1utlt8pnb6iseqhhljctv0b2go6o78on.apps.googleusercontent.com</string>
-    <key>UILaunchScreen</key>
-    <dict>
-        <key>UIColorName</key>
-        <string>AccentColor</string>
-        <key>UIImageName</key>
-        <string></string>
-    </dict>
-
+	<string>690844706596-1utlt8pnb6iseqhhljctv0b2go6o78on.apps.googleusercontent.com</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>CFBundleName</key>
+	<string>PawPal</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>UILaunchScreen</key>
+	<dict>
+		<key>UIColorName</key>
+		<string>AccentColor</string>
+		<key>UIImageName</key>
+		<string></string>
+	</dict>
 </dict>
 </plist>

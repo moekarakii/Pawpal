@@ -4,39 +4,47 @@
 //
 //  Created by Moe Karaki on 7/18/25.
 //
+
 import SwiftUI
 import Firebase
 
 @main
 struct PawPalApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    @State private var isLoading = true
+
+    @StateObject private var locationManager = LocationManager()
+    @StateObject private var authVM = AuthViewModel()
 
     var body: some Scene {
         WindowGroup {
             ZStack {
                 Color(.systemBackground)
                     .ignoresSafeArea()
-                
-                if isLoading {
+
+                // 1. Firebase is still checking for an existing session
+                if authVM.isLoading {
                     LoadingView()
-                        .transition(.opacity)
-                } else {
+                }
+
+                // 2. Not logged in = show Welcome
+                else if authVM.user == nil {
                     NavigationStack {
                         WelcomeView()
-                        VCInspector()
                     }
-                    .transition(.opacity)
+                    .environmentObject(locationManager)
+                }
+
+                // 3. Logged in = show MainTabView
+                else {
+                    MainTabView()
+                        .environmentObject(locationManager)
                 }
             }
-            .onAppear {
-                // Show loading screen for 2.5 seconds
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
-                    withAnimation(.easeInOut(duration: 0.8)) {
-                        isLoading = false
-                    }
-                }
+            .task {
+                locationManager.requestLocationPermission()
             }
+            // injecting authVM to whole application (Needed for other views to see/use the AuthViewModel)
+            .environmentObject(authVM)
         }
     }
 }

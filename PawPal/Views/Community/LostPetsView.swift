@@ -15,8 +15,8 @@ import FirebaseFirestore
 struct LostPetsView: View {
     @State private var lostPets: [LostPet] = []
     @Environment(\.dismiss) var dismiss
-    @State private var isLoading = false 
-    @State private var showAlert = false 
+    @State private var isLoading = false
+    @State private var showAlert = false
     @State private var alertMessage = ""
     @State private var searchText = ""
 
@@ -32,64 +32,65 @@ struct LostPetsView: View {
     }
 
     var body: some View {
-        NavigationStack {
-            Group {
-                if isLoading {
-                    VStack(spacing: 12) {
-                        ProgressView("Loading reports…")
-                        Text("Fetching recent lost pet reports")
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                } else if lostPets.isEmpty {
-                    VStack(spacing: 12) {
-                        Image(systemName: "magnifyingglass")
-                            .font(.system(size: 42))
-                            .foregroundStyle(.secondary)
-                        Text("No reports yet")
-                            .font(.headline)
-                        Text("Be the first to submit a report from the Report tab.")
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal)
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                } else {
-                    ScrollView {
-                        LazyVStack {
-                            ForEach(filteredPets) { pet in
-                                NavigationLink(destination: LostPetDetailView(pet: pet)) {
-                                    LostPetRow(pet: pet)
-                                }
-                                .buttonStyle(PlainButtonStyle())
-                            }
-                        }
-                        .padding()
-                    }
-                    .refreshable {
-                        fetchLostPets()
-                    }
+
+        // Removed NavigationStack wrapper earlier to fix toolbar duplication
+        Group {
+            if isLoading {
+                VStack(spacing: 12) {
+                    ProgressView("Loading reports…")
+                    Text("Fetching recent lost pet reports")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
                 }
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Text("Lost Pets")
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+            } else if lostPets.isEmpty {
+                VStack(spacing: 12) {
+                    Image(systemName: "magnifyingglass")
+                        .font(.system(size: 42))
+                        .foregroundStyle(.secondary)
+                    Text("No reports yet")
                         .font(.headline)
+                    Text("Be the first to submit a report from the Report tab.")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal)
                 }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: {
-                        logout()
-                    }) {
-                        Text("Logout")
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+            } else {
+                ScrollView {
+                    LazyVStack {
+                        ForEach(filteredPets) { pet in
+                            NavigationLink(destination: LostPetDetailView(pet: pet)) {
+                                LostPetRow(pet: pet)
+                            }
+                            .buttonStyle(PlainButtonStyle())
+                        }
                     }
-                    .foregroundColor(.red)
+                    .padding()
+                }
+                .refreshable {
+                    fetchLostPets()
                 }
             }
-            .onAppear(perform: fetchLostPets)
-            .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .automatic), prompt: "Search by name or description")
         }
+        .toolbar {
+            // Keeping the title here since you had it before (it would probably better to move this to MainTabView. Will come back to this)
+            ToolbarItem(placement: .navigationBarLeading) {
+                Text("Lost Pets")
+                    .font(.headline)
+            }
+
+            // Removed duplicate logout since we are having the MainTabView Handle this now. 
+        }
+        .onAppear(perform: fetchLostPets)
+        .searchable(
+            text: $searchText,
+            placement: .navigationBarDrawer(displayMode: .automatic),
+            prompt: "Search by name or description"
+        )
         .alert("Oops", isPresented: $showAlert) {
             Button("OK", role: .cancel) { }
         } message: {
@@ -104,17 +105,17 @@ struct LostPetsView: View {
             .order(by: FS.LostPets.timestamp, descending: true)
             .getDocuments { snapshot, error in
                 DispatchQueue.main.async {
-                    isLoading = false  
+                    isLoading = false
 
                     if let error = error {
-                            alertMessage = error.localizedDescription
-                            showAlert = true
-                            return
+                        alertMessage = error.localizedDescription
+                        showAlert = true
+                        return
                     }
 
                     guard let documents = snapshot?.documents else {
                         lostPets = []
-                        return 
+                        return
                     }
 
                     self.lostPets = documents.compactMap { doc in
@@ -130,20 +131,17 @@ struct LostPetsView: View {
 
                         let timestamp = (data[FS.LostPets.timestamp] as? Timestamp)?.dateValue()
 
-                        return LostPet(id: doc.documentID, petName: name, description: desc, latitude: lat, longitude: lng, timestamp: timestamp)
+                        return LostPet(
+                            id: doc.documentID,
+                            petName: name,
+                            description: desc,
+                            latitude: lat,
+                            longitude: lng,
+                            timestamp: timestamp
+                        )
                     }
                 }
             }
-    }
-
-    private func logout() {
-        do {
-            try Auth.auth().signOut()
-            dismiss()
-        } catch {
-            alertMessage = "Logout failed: \(error.localizedDescription)"
-            showAlert = true
-        }
     }
 }
 
