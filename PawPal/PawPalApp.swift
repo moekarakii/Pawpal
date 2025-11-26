@@ -24,8 +24,6 @@ struct PawPalApp: App {
                 // 1. Firebase is still checking for an existing session
                 if authVM.isLoading {
                     LoadingView()
-                        .opacity(1)
-                        .animation(.easeInOut(duration: 0.3), value: authVM.isLoading)
                 }
 
                 // 2. Not logged in = show Welcome
@@ -34,16 +32,12 @@ struct PawPalApp: App {
                         WelcomeView()
                     }
                     .environmentObject(locationManager)
-                    .opacity(1)    // safe fade-in
-                    .animation(.easeInOut(duration: 0.3), value: authVM.user)
                 }
 
                 // 3. Logged in = show MainTabView
                 else {
                     MainTabView()
                         .environmentObject(locationManager)
-                        .opacity(1)
-                        .animation(.easeInOut(duration: 0.3), value: authVM.user)
                 }
             }
             .task {
