@@ -26,34 +26,42 @@ struct MainTabView: View {
     var body: some View {
         TabView {
 
-           
             // Browse Tab (Lost Pets List)
             // Contains a logout button that uses the global
             // AuthViewModel instead of local logout logic.
-            LostPetsView()
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button("Logout") {
-                            authVM.signOut()
+            // Wrapped in its own NavigationStack to avoid
+            // toolbar duplication and disappearance.
+            NavigationStack {
+                LostPetsView()
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button("Logout") {
+                                authVM.signOut()
+                            }
+                            .foregroundColor(.red)
                         }
-                        .foregroundColor(.red)
                     }
-                }
-                .tabItem {
-                    Label("Browse", systemImage: "list.bullet")
-                }
+            }
+            .tabItem {
+                Label("Browse", systemImage: "list.bullet")
+            }
 
-            // Map Tab
-            LostPetMapView()
-                .tabItem {
-                    Label("Map", systemImage: "map")
-                }
-
-            // Report Tab
-            LostPetReportView()
-                .tabItem {
-                    Label("Report", systemImage: "plus.circle")
-                }
+            // Map Tab — wrapped in NavigationStack to ensure
+            // consistent navigation behavior across tabs.
+          
+            NavigationStack {
+                LostPetMapView()
+            }
+            .tabItem {
+                Label("Map", systemImage: "map")
+            }
+            
+            NavigationStack {
+                LostPetReportView()
+            }
+            .tabItem {
+                Label("Report", systemImage: "plus.circle")
+            }
         }
     }
 }

@@ -178,7 +178,8 @@ struct LostPetMapView: View {
             )
         )
         
-        print("Map centered on user at \(location.coordinate.latitude), \(location.coordinate.longitude)")
+        // DEBUG: This code is for testing map location data
+        //  print("Map centered on user at \(location.coordinate.latitude), \(location.coordinate.longitude)")
     }
 }
 
