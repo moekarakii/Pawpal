@@ -62,7 +62,14 @@ struct MainTabView: View {
             .tabItem {
                 Label("Report", systemImage: "plus.circle")
             }
+            
+            NavigationStack{
+                UserProfileView()
+            }.tabItem {
+                Label("Profile", systemImage: "person")
+            }
         }
+      
     }
 }
 

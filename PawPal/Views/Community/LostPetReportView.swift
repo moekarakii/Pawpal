@@ -35,7 +35,7 @@ extension UIApplication {
 struct LostPetReportView: View {
     @StateObject private var locationManager = LocationManager()
     @StateObject private var completerDelegateWrapper = CompleterDelegateWrapper()
-
+    @EnvironmentObject var authVM: AuthViewModel
     @State private var petName = ""
     @State private var petDescription = ""
     @State private var pinCoordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
@@ -148,13 +148,16 @@ struct LostPetReportView: View {
         }
 
         isSubmitting = true
-
+        
         let data: [String: Any] = [
             FS.LostPets.petName: petName,
             FS.LostPets.description: petDescription,
             FS.LostPets.lat: pinCoordinate.latitude,
             FS.LostPets.lng: pinCoordinate.longitude,
-            FS.LostPets.timestamp: FieldValue.serverTimestamp()
+            FS.LostPets.timestamp: FieldValue.serverTimestamp(),
+            
+            // Attempt to connect reports with user ID, Also accounts for old reports not having userId attac
+            "userId": authVM.user?.uid ?? ""
         ]
 
         Firestore.firestore().collection(FS.LostPets.collection).addDocument(data: data) { error in
