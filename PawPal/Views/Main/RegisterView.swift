@@ -14,41 +14,103 @@ struct RegisterView: View {
     @State private var password = ""
     @State private var errorMessage: String?
     @State private var navigateToProfileSetup = false
+    @State private var logoScale = 0.8
 
     var body: some View {
-        VStack(spacing: 20) {
-            Text("Create an Account")
-                .font(.title)
-                .bold()
+        ZStack {
+            // Background gradient
+            LinearGradient(
+                gradient: Gradient(colors: [
+                    Color.blue.opacity(0.05),
+                    Color.purple.opacity(0.02),
+                    Color.white
+                ]),
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            .ignoresSafeArea()
+            
+            ScrollView {
+                VStack(spacing: 30) {
+                    Spacer(minLength: 60)
+                    
+                    // PawPal Logo
+                    PawPalLogo(size: 100, showText: true)
+                        .scaleEffect(logoScale)
+                        .onAppear {
+                            withAnimation(.spring(response: 1.0, dampingFraction: 0.7)) {
+                                logoScale = 1.0
+                            }
+                        }
 
-            TextField("Email", text: $email)
-                .textFieldStyle(.roundedBorder)
-                .autocapitalization(.none)
+                    // Welcome text
+                    VStack(spacing: 8) {
+                        Text("Join PawPal")
+                            .font(.title)
+                            .fontWeight(.bold)
+                            .foregroundColor(.primary)
+                        
+                        Text("Create your account and start helping pets in your community")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal)
+                    }
 
-            SecureField("Password", text: $password)
-                .textFieldStyle(.roundedBorder)
+                    // Form fields
+                    VStack(spacing: 16) {
+                        TextField("Email", text: $email)
+                            .textFieldStyle(.roundedBorder)
+                            .autocapitalization(.none)
+                            .keyboardType(.emailAddress)
 
-            if let error = errorMessage {
-                Text(error)
-                    .foregroundColor(.red)
-                    .multilineTextAlignment(.center)
-            }
+                        SecureField("Password", text: $password)
+                            .textFieldStyle(.roundedBorder)
 
-            Button("Register") {
-                register()
-            }
-            .buttonStyle(.borderedProminent)
+                        if let error = errorMessage {
+                            Text(error)
+                                .foregroundColor(.red)
+                                .font(.caption)
+                                .multilineTextAlignment(.center)
+                        }
+                    }
+                    .padding(.horizontal, 20)
 
-            Button("Already have an account? Log in") {
-                dismiss()
-            }
+                    // Register button
+                    Button("Create Account") {
+                        register()
+                    }
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 50)
+                    .background(
+                        LinearGradient(
+                            gradient: Gradient(colors: [Color.blue, Color.purple.opacity(0.8)]),
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
+                    .foregroundColor(.white)
+                    .fontWeight(.semibold)
+                    .cornerRadius(25)
+                    .shadow(color: .blue.opacity(0.3), radius: 5, x: 0, y: 3)
+                    .padding(.horizontal, 20)
 
-            .navigationDestination(isPresented: $navigateToProfileSetup) {
-                EnterProfileView()
+                    // Login link
+                    Button("Already have an account? Sign in") {
+                        dismiss()
+                    }
+                    .foregroundColor(.blue)
+                    .fontWeight(.medium)
+
+                    Spacer(minLength: 40)
+                }
             }
         }
-        .padding()
-        .navigationTitle("Register")
+        .navigationDestination(isPresented: $navigateToProfileSetup) {
+            EnterProfileView()
+        }
+        .navigationTitle("")
+        .navigationBarHidden(true)
     }
 
     private func register() {

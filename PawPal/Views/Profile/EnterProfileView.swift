@@ -75,7 +75,7 @@ struct EnterProfileView: View {
                 }
                 .navigationDestination(for: String.self) { value in
                     if value == "mainApp" {
-                        MainAppView()
+                        MainTabView()
                     }
                 }
             }

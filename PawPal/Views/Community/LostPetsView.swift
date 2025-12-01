@@ -10,70 +10,138 @@ import SwiftUI
 import Firebase
 import FirebaseAuth
 import MapKit
+import FirebaseFirestore
 
 struct LostPetsView: View {
     @State private var lostPets: [LostPet] = []
     @Environment(\.dismiss) var dismiss
+    @State private var isLoading = false 
+    @State private var showAlert = false 
+    @State private var alertMessage = ""
+    @State private var searchText = ""
+
+    private var filteredPets: [LostPet] {
+        let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+        if query.isEmpty {
+            return lostPets
+        }
+        return lostPets.filter { pet in
+            pet.petName.localizedCaseInsensitiveContains(query) ||
+            pet.description.localizedCaseInsensitiveContains(query)
+        }
+    }
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                LazyVStack {
-                    ForEach(lostPets) { pet in
-                        NavigationLink(destination: LostPetDetailView(pet: pet)) {
-                            LostPetRow(pet: pet)
+            Group {
+                if isLoading {
+                    VStack(spacing: 12) {
+                        ProgressView("Loading reports…")
+                        Text("Fetching recent lost pet reports")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else if lostPets.isEmpty {
+                    VStack(spacing: 12) {
+                        Image(systemName: "magnifyingglass")
+                            .font(.system(size: 42))
+                            .foregroundStyle(.secondary)
+                        Text("No reports yet")
+                            .font(.headline)
+                        Text("Be the first to submit a report from the Report tab.")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else {
+                    ScrollView {
+                        LazyVStack {
+                            ForEach(filteredPets) { pet in
+                                NavigationLink(destination: LostPetDetailView(pet: pet)) {
+                                    LostPetRow(pet: pet)
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                            }
                         }
-                        .buttonStyle(PlainButtonStyle())
+                        .padding()
+                    }
+                    .background(Color(.systemGroupedBackground))
+            .refreshable {
+                        fetchLostPets()
                     }
                 }
-                .padding()
             }
-            .background(Color(.systemGroupedBackground))
-            .navigationTitle("Lost Pets")
             .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Text("Lost Pets")
+                        .font(.headline)
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Logout") {
+                    Button(action: {
                         logout()
+                    }) {
+                        Text("Logout")
                     }
                     .foregroundColor(.red)
                 }
             }
             .onAppear(perform: fetchLostPets)
+            .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .automatic), prompt: "Search by name or description")
+        }
+        .alert("Oops", isPresented: $showAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text(alertMessage)
         }
     }
 
     /// Loads all lost pet reports for the feed (supports both legacy and new schemas).
     private func fetchLostPets() {
-        Firestore.firestore().collection("lost_pets").getDocuments { snapshot, error in
-            guard let documents = snapshot?.documents else { return }
+        isLoading = true
+        Firestore.firestore()
+            .collection(FS.LostPets.collection)
+            .order(by: FS.LostPets.timestamp, descending: true)
+            .getDocuments { snapshot, error in
+                DispatchQueue.main.async {
+                    isLoading = false  
 
-            self.lostPets = documents.compactMap { doc in
-                let data = doc.data()
-                // Older documents used `lat/lng`, newer ones store `latitude/longitude`.
-                let lat = data["lat"] as? Double ?? data["latitude"] as? Double
-                let lng = data["lng"] as? Double ?? data["longitude"] as? Double
+                    if let error = error {
+                            alertMessage = error.localizedDescription
+                            showAlert = true
+                            return
+                    }
 
-                guard
-                    let name = data["petName"] as? String,
-                    let desc = data["description"] as? String,
-                    let lat,
-                    let lng
-                else {
-                    return nil
-                }
+                    guard let documents = snapshot?.documents else {
+                        lostPets = []
+                        return 
+                    }
 
-                let timestamp = (data["timestamp"] as? Timestamp)?.dateValue()
-                let photoURL = data["photoURL"] as? String // Drives the AsyncImage thumbnail/detail hero
+                    self.lostPets = documents.compactMap { doc in
+                        let data = doc.data()
+                        guard
+                            let name = data[FS.LostPets.petName] as? String,
+                            let desc = data[FS.LostPets.description] as? String,
+                            let lat  = data[FS.LostPets.lat] as? Double,
+                            let lng  = data[FS.LostPets.lng] as? Double
+                        else {
+                            return nil
+                        }
 
-                return LostPet(id: doc.documentID,
+                        let timestamp = (data[FS.LostPets.timestamp] as? Timestamp)?.dateValue()
+
+                        return LostPet(id: doc.documentID,
                                 petName: name,
                                 description: desc,
                                 latitude: lat,
                                 longitude: lng,
                                 photoURL: photoURL,
                                 timestamp: timestamp)
+                    }
+                }
             }
-        }
     }
 
     private func logout() {
@@ -81,7 +149,8 @@ struct LostPetsView: View {
             try Auth.auth().signOut()
             dismiss()
         } catch {
-            print("Logout failed: \(error.localizedDescription)")
+            alertMessage = "Logout failed: \(error.localizedDescription)"
+            showAlert = true
         }
     }
 }

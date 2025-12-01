@@ -10,6 +10,18 @@ import MapKit
 
 struct LostPetDetailView: View {
     let pet: LostPet
+
+    private var region: MKCoordinateRegion? {
+        guard (-90.0...90.0).contains(pet.latitude),
+              (-180.0...180.0).contains(pet.longitude) else {
+            return nil
+        }
+
+        return MKCoordinateRegion(
+            center: CLLocationCoordinate2D(latitude: pet.latitude, longitude: pet.longitude),
+            span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+        )
+    }
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
