@@ -14,9 +14,16 @@ struct LostPet: Identifiable, Codable {
     var description: String
     var latitude: Double
     var longitude: Double
+    /// Optional Storage URL used for the feed thumbnail + detail hero image.
+    var photoURL: String? = nil
     var timestamp: Date? = nil
 
     var timestampDate: Date? {
         return timestamp
+    }
+
+    var imageURL: URL? {
+        guard let photoURL, let url = URL(string: photoURL) else { return nil }
+        return url
     }
 }

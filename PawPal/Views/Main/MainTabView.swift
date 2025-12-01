@@ -33,7 +33,7 @@ struct MainTabView: View {
                     Label("Map", systemImage: "map")
                 }
 
-            LostPetReportView()
+            ReportingView()
                 .tabItem {
                     Label("Report", systemImage: "plus.circle")
                 }

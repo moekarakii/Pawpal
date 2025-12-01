@@ -30,22 +30,34 @@ struct LostPetMapView: View {
         .navigationTitle("Lost Pets Map")
     }
 
+    /// Mirrors the list fetch but only keeps what the map needs.
     private func fetchLostPets() {
         Firestore.firestore().collection("lost_pets").getDocuments { snapshot, error in
             guard let documents = snapshot?.documents else { return }
 
             self.lostPets = documents.compactMap { doc in
                 let data = doc.data()
+                // Support both `lat/lng` and `latitude/longitude`.
+                let lat = data["lat"] as? Double ?? data["latitude"] as? Double
+                let lng = data["lng"] as? Double ?? data["longitude"] as? Double
+
                 guard
                     let name = data["petName"] as? String,
                     let desc = data["description"] as? String,
-                    let lat = data["lat"] as? Double,
-                    let lng = data["lng"] as? Double
+                    let lat,
+                    let lng
                 else {
                     return nil
                 }
 
-                return LostPet(id: doc.documentID, petName: name, description: desc, latitude: lat, longitude: lng)
+                let photoURL = data["photoURL"] as? String // passed along so detail/list can show the image
+
+                return LostPet(id: doc.documentID,
+                                petName: name,
+                                description: desc,
+                                latitude: lat,
+                                longitude: lng,
+                                photoURL: photoURL)
             }
         }
     }
