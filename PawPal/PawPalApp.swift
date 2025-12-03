@@ -5,8 +5,9 @@
 //  Created by Moe Karaki on 7/18/25.
 //
 
-import SwiftUI
 import Firebase
+import SwiftUI
+import UserNotifications
 
 @main
 struct PawPalApp: App {
@@ -14,6 +15,20 @@ struct PawPalApp: App {
 
     @StateObject private var locationManager = LocationManager()
     @StateObject private var authVM = AuthViewModel()
+    
+    // enabling alert permissions
+    @MainActor
+    func requestNotificationPermission() async {
+        do {
+            let granted = try await UNUserNotificationCenter.current()
+                .requestAuthorization(options: [.alert, .sound, .badge])
+
+            print(granted ? "Notifications allowed" : "Notifications denied")
+
+        } catch {
+            print("Failed to request notification authorization:", error)
+        }
+    }
 
     var body: some Scene {
         WindowGroup {
@@ -42,6 +57,7 @@ struct PawPalApp: App {
             }
             .task {
                 locationManager.requestLocationPermission()
+                await requestNotificationPermission()
             }
             // injecting authVM to whole application (Needed for other views to see/use the AuthViewModel)
             .environmentObject(authVM)
@@ -52,17 +68,36 @@ struct PawPalApp: App {
 struct VCInspector: View {
     var body: some View {
         Color.clear.onAppear {
-            for scene in UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene }) {
+            for scene in UIApplication.shared.connectedScenes.compactMap({
+                $0 as? UIWindowScene
+            }) {
                 for w in scene.windows {
                     let r = w.rootViewController
-                    print("WINDOW corner:", w.layer.cornerRadius, "clips:", w.clipsToBounds)
-                    print("ROOT:", type(of: r ?? UIViewController()),
-                          "modal:", r?.modalPresentationStyle.rawValue ?? -9,
-                          "view.corner:", r?.view.layer.cornerRadius ?? -1,
-                          "clips:", r?.view.clipsToBounds ?? false)
+                    print(
+                        "WINDOW corner:",
+                        w.layer.cornerRadius,
+                        "clips:",
+                        w.clipsToBounds
+                    )
+                    print(
+                        "ROOT:",
+                        type(of: r ?? UIViewController()),
+                        "modal:",
+                        r?.modalPresentationStyle.rawValue ?? -9,
+                        "view.corner:",
+                        r?.view.layer.cornerRadius ?? -1,
+                        "clips:",
+                        r?.view.clipsToBounds ?? false
+                    )
                     if let p = r?.presentedViewController {
-                        print("PRESENTED:", type(of: p), "modal:", p.modalPresentationStyle.rawValue,
-                              "view.corner:", p.view.layer.cornerRadius)
+                        print(
+                            "PRESENTED:",
+                            type(of: p),
+                            "modal:",
+                            p.modalPresentationStyle.rawValue,
+                            "view.corner:",
+                            p.view.layer.cornerRadius
+                        )
                     }
                 }
             }
