@@ -57,6 +57,7 @@ struct PawPalApp: App {
             }
             .task {
                 locationManager.requestLocationPermission()
+                authVM.attachLocationUpdates(from: locationManager)
                 await requestNotificationPermission()
             }
             // injecting authVM to whole application (Needed for other views to see/use the AuthViewModel)
