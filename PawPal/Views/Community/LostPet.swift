@@ -29,6 +29,7 @@ struct LostPet: Identifiable, Codable {
     var latitude: Double
     var longitude: Double
     var timestamp: Date? = nil
+    var userId: String? = nil
 
     var timestampDate: Date? {
         return timestamp

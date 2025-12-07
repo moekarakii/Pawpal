@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		84AA5A472ED79DED002D98ED /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AA5A462ED79DED002D98ED /* AuthViewModel.swift */; };
+		84C67EE72EDA215300870058 /* UserProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84C67EE62EDA215300870058 /* UserProfileView.swift */; };
 		9B165F3A2CBB3FF400BC8DB2 /* CommunityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B165F392CBB3FF300BC8DB2 /* CommunityView.swift */; };
 		9B165F3C2CBB40B200BC8DB2 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B165F3B2CBB40B200BC8DB2 /* MapView.swift */; };
 		9BC1BC222CBAE7E200F1DD8E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BC1BC212CBAE7E200F1DD8E /* AppDelegate.swift */; };
@@ -43,6 +45,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		84AA5A462ED79DED002D98ED /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
+		84C67EE62EDA215300870058 /* UserProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileView.swift; sourceTree = "<group>"; };
 		9B165F392CBB3FF300BC8DB2 /* CommunityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityView.swift; sourceTree = "<group>"; };
 		9B165F3B2CBB40B200BC8DB2 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		9BC1BC212CBAE7E200F1DD8E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -94,6 +98,7 @@
 		9B9720942CFD096400AED15E /* Community */ = {
 			isa = PBXGroup;
 			children = (
+				84C67EE62EDA215300870058 /* UserProfileView.swift */,
 				9C90A8E82E597F5F0063C4BC /* LostPet.swift */,
 				9C90A8E62E597E920063C4BC /* LostPetDetailView.swift */,
 				9C90A8E42E596FB90063C4BC /* LostPetMapView.swift */,
@@ -198,6 +203,7 @@
 		A22102BE2E2B06E900103E28 /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				84AA5A462ED79DED002D98ED /* AuthViewModel.swift */,
 				9C90A8E02E593D820063C4BC /* MainTabView.swift */,
 				A22102A82E271B8E00103E28 /* MainAppView.swift */,
 				A22102B12E2AFA4E00103E28 /* RegisterView.swift */,
@@ -281,6 +287,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A22102BF2E2B0D8800103E28 /* CommunityPostRow.swift in Sources */,
+				84C67EE72EDA215300870058 /* UserProfileView.swift in Sources */,
 				9CD26B9B2E4C01C20004CB4D /* LocationManager.swift in Sources */,
 				9BC1BC222CBAE7E200F1DD8E /* AppDelegate.swift in Sources */,
 				9C90A8E72E597E9A0063C4BC /* LostPetDetailView.swift in Sources */,
@@ -304,6 +311,7 @@
 				9C9009DF2E4D4FB8005A1D14 /* SearchCompleterDelegate.swift in Sources */,
 				A22102C32E2B111D00103E28 /* ImagePicker.swift in Sources */,
 				A22102AC2E2AF76500103E28 /* ProfileView.swift in Sources */,
+				84AA5A472ED79DED002D98ED /* AuthViewModel.swift in Sources */,
 				A22102B42E2AFEF300103E28 /* PawPalApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -437,7 +445,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = VB6N5HD2Q5;
+				DEVELOPMENT_TEAM = X93W42LNZZ;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = PawPal/Resources/Info.plist;
@@ -465,7 +473,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = VB6N5HD2Q5;
+				DEVELOPMENT_TEAM = X93W42LNZZ;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = PawPal/Resources/Info.plist;

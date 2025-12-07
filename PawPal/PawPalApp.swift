@@ -4,39 +4,64 @@
 //
 //  Created by Moe Karaki on 7/18/25.
 //
-import SwiftUI
+
 import Firebase
+import SwiftUI
+import UserNotifications
 
 @main
 struct PawPalApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    @State private var isLoading = true
+
+    @StateObject private var locationManager = LocationManager()
+    @StateObject private var authVM = AuthViewModel()
+    
+    // enabling alert permissions
+    @MainActor
+    func requestNotificationPermission() async {
+        do {
+            let granted = try await UNUserNotificationCenter.current()
+                .requestAuthorization(options: [.alert, .sound, .badge])
+
+            print(granted ? "Notifications allowed" : "Notifications denied")
+
+        } catch {
+            print("Failed to request notification authorization:", error)
+        }
+    }
 
     var body: some Scene {
         WindowGroup {
             ZStack {
                 Color(.systemBackground)
                     .ignoresSafeArea()
-                
-                if isLoading {
+
+                // 1. Firebase is still checking for an existing session
+                if authVM.isLoading {
                     LoadingView()
-                        .transition(.opacity)
-                } else {
+                }
+
+                // 2. Not logged in = show Welcome
+                else if authVM.user == nil {
                     NavigationStack {
                         WelcomeView()
-                        VCInspector()
                     }
-                    .transition(.opacity)
+                    .environmentObject(locationManager)
+                }
+
+                // 3. Logged in = show MainTabView
+                else {
+                    MainTabView()
+                        .environmentObject(locationManager)
                 }
             }
-            .onAppear {
-                // Show loading screen for 2.5 seconds
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
-                    withAnimation(.easeInOut(duration: 0.8)) {
-                        isLoading = false
-                    }
-                }
+            .task {
+                locationManager.requestLocationPermission()
+                authVM.attachLocationUpdates(from: locationManager)
+                await requestNotificationPermission()
             }
+            // injecting authVM to whole application (Needed for other views to see/use the AuthViewModel)
+            .environmentObject(authVM)
         }
     }
 }
@@ -44,17 +69,36 @@ struct PawPalApp: App {
 struct VCInspector: View {
     var body: some View {
         Color.clear.onAppear {
-            for scene in UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene }) {
+            for scene in UIApplication.shared.connectedScenes.compactMap({
+                $0 as? UIWindowScene
+            }) {
                 for w in scene.windows {
                     let r = w.rootViewController
-                    print("WINDOW corner:", w.layer.cornerRadius, "clips:", w.clipsToBounds)
-                    print("ROOT:", type(of: r ?? UIViewController()),
-                          "modal:", r?.modalPresentationStyle.rawValue ?? -9,
-                          "view.corner:", r?.view.layer.cornerRadius ?? -1,
-                          "clips:", r?.view.clipsToBounds ?? false)
+                    print(
+                        "WINDOW corner:",
+                        w.layer.cornerRadius,
+                        "clips:",
+                        w.clipsToBounds
+                    )
+                    print(
+                        "ROOT:",
+                        type(of: r ?? UIViewController()),
+                        "modal:",
+                        r?.modalPresentationStyle.rawValue ?? -9,
+                        "view.corner:",
+                        r?.view.layer.cornerRadius ?? -1,
+                        "clips:",
+                        r?.view.clipsToBounds ?? false
+                    )
                     if let p = r?.presentedViewController {
-                        print("PRESENTED:", type(of: p), "modal:", p.modalPresentationStyle.rawValue,
-                              "view.corner:", p.view.layer.cornerRadius)
+                        print(
+                            "PRESENTED:",
+                            type(of: p),
+                            "modal:",
+                            p.modalPresentationStyle.rawValue,
+                            "view.corner:",
+                            p.view.layer.cornerRadius
+                        )
                     }
                 }
             }
