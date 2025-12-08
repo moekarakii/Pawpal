@@ -71,9 +71,12 @@ struct LoginView: View {
                         .padding(.top, 20)
                         .padding(.horizontal, 30)
                         
-                        GoogleSignInButton(viewModel: GoogleSignInButtonViewModel(scheme: .dark, style: .wide, state: .normal)) {
+                        GoogleSignInButton(viewModel: GoogleSignInButtonViewModel(scheme: .light, style: .wide, state: .normal)) {
                             handleGoogleSignIn()
                         }
+                        .cornerRadius(10)
+                        .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 10)
+                        .frame(height: 50)
                         .padding(.top, 10)
                         .padding(.horizontal, 30)
                         

@@ -18,23 +18,9 @@ struct PawPalLogo: View {
     
     var body: some View {
         VStack(spacing: showText ? 12 : 0) {
-            ZStack {
-                // Background circle with gradient
-                Circle()
-                    .fill(
-                        LinearGradient(
-                            gradient: Gradient(colors: [Color.blue.opacity(0.8), Color.purple.opacity(0.6)]),
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .frame(width: size, height: size)
-                    .shadow(color: .black.opacity(0.2), radius: 10, x: 0, y: 5)
-                
-                // Single paw emoji centered
-                Text("🐾")
-                    .font(.system(size: size * 0.4))
-            }
+            // Paw emoji without circle background
+            Text("🐾")
+                .font(.system(size: size * 0.5))
             
             if showText {
                 VStack(spacing: 4) {

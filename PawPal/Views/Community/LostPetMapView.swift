@@ -72,7 +72,6 @@ struct LostPetMapView: View {
                 }
             }
             .ignoresSafeArea(edges: .bottom)
-            .navigationTitle("Lost Pets Map")
 
             // Empty state message
             if authVM.lostPets.isEmpty {
