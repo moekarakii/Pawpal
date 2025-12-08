@@ -21,12 +21,12 @@
 		9C90A8E92E597F650063C4BC /* LostPet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C90A8E82E597F5F0063C4BC /* LostPet.swift */; };
 		9CD26B992E4C018A0004CB4D /* LostPetReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD26B982E4C01880004CB4D /* LostPetReportView.swift */; };
 		9CD26B9B2E4C01C20004CB4D /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD26B9A2E4C01BC0004CB4D /* LocationManager.swift */; };
-		9CF1E1022EF5A1B000000002 /* FirestoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CF1E1012EF5A1B000000001 /* FirestoreService.swift */; };
 		A221029F2E1E1A6200103E28 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = A221029E2E1E1A6200103E28 /* GoogleSignIn */; };
 		A22102A12E1E1A6200103E28 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A22102A02E1E1A6200103E28 /* GoogleSignInSwift */; };
 		A22102A32E1E1AC400103E28 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = A22102A22E1E1AC400103E28 /* FirebaseStorage */; };
 		A22102A52E271A9C00103E28 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22102A42E271A9300103E28 /* LoginView.swift */; };
 		A22102A72E271B4C00103E28 /* EnterProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22102A62E271B3E00103E28 /* EnterProfileView.swift */; };
+		A22102A92E271B9400103E28 /* MainAppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22102A82E271B8E00103E28 /* MainAppView.swift */; };
 		A22102AC2E2AF76500103E28 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22102AB2E2AF75D00103E28 /* ProfileView.swift */; };
 		A22102B02E2AF8C600103E28 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22102AF2E2AF8B900103E28 /* WelcomeView.swift */; };
 		A22102B22E2AFA5200103E28 /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22102B12E2AFA4E00103E28 /* RegisterView.swift */; };
@@ -39,7 +39,6 @@
 		A27BC4E52E1E158500A03862 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = A27BC4E42E1E158500A03862 /* FirebaseAuth */; };
 		A27BC4E72E1E158500A03862 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = A27BC4E62E1E158500A03862 /* FirebaseCore */; };
 		A27BC4E92E1E158500A03862 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = A27BC4E82E1E158500A03862 /* FirebaseFirestore */; };
-		A28CBC642EE66F6C00734192 /* LostPetRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28CBC632EE66F6C00734192 /* LostPetRow.swift */; };
 		A29478C52ED4405E00B94BE7 /* PawPalLogo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29478C42ED4405E00B94BE7 /* PawPalLogo.swift */; };
 		A29478C62ED4405E00B94BE7 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29478C32ED4405E00B94BE7 /* LoadingView.swift */; };
 		A2FD3C532EE64E9C000DFCEF /* Color+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FD3C512EE64E9C000DFCEF /* Color+Extensions.swift */; };
@@ -63,9 +62,9 @@
 		9C90A8E82E597F5F0063C4BC /* LostPet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LostPet.swift; sourceTree = "<group>"; };
 		9CD26B982E4C01880004CB4D /* LostPetReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LostPetReportView.swift; sourceTree = "<group>"; };
 		9CD26B9A2E4C01BC0004CB4D /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
-		9CF1E1012EF5A1B000000001 /* FirestoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreService.swift; sourceTree = "<group>"; };
 		A22102A42E271A9300103E28 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		A22102A62E271B3E00103E28 /* EnterProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterProfileView.swift; sourceTree = "<group>"; };
+		A22102A82E271B8E00103E28 /* MainAppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainAppView.swift; sourceTree = "<group>"; };
 		A22102AB2E2AF75D00103E28 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		A22102AE2E2AF86000103E28 /* FlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowLayout.swift; sourceTree = "<group>"; };
 		A22102AF2E2AF8B900103E28 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
@@ -76,7 +75,6 @@
 		A22102C22E2B111800103E28 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		A22102C42E2B121800103E28 /* PawPal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PawPal.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A27B1BC42E4ACC2500D67D57 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		A28CBC632EE66F6C00734192 /* LostPetRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LostPetRow.swift; sourceTree = "<group>"; };
 		A29478C32ED4405E00B94BE7 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		A29478C42ED4405E00B94BE7 /* PawPalLogo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PawPalLogo.swift; sourceTree = "<group>"; };
 		A2FD3C512EE64E9C000DFCEF /* Color+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extensions.swift"; sourceTree = "<group>"; };
@@ -104,7 +102,6 @@
 		9B9720942CFD096400AED15E /* Community */ = {
 			isa = PBXGroup;
 			children = (
-				A28CBC632EE66F6C00734192 /* LostPetRow.swift */,
 				A2FD3C5A2EE66A5E000DFCEF /* Community.storyboard */,
 				84C67EE62EDA215300870058 /* UserProfileView.swift */,
 				9C90A8E82E597F5F0063C4BC /* LostPet.swift */,
@@ -184,7 +181,6 @@
 			isa = PBXGroup;
 			children = (
 				AD66E56F2D35B5D500995985 /* AuthService.swift */,
-				9CF1E1012EF5A1B000000001 /* FirestoreService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -215,6 +211,7 @@
 			children = (
 				84AA5A462ED79DED002D98ED /* AuthViewModel.swift */,
 				9C90A8E02E593D820063C4BC /* MainTabView.swift */,
+				A22102A82E271B8E00103E28 /* MainAppView.swift */,
 				A22102B12E2AFA4E00103E28 /* RegisterView.swift */,
 				A22102A42E271A9300103E28 /* LoginView.swift */,
 			);
@@ -310,7 +307,6 @@
 				9BC1BC222CBAE7E200F1DD8E /* AppDelegate.swift in Sources */,
 				9C90A8E72E597E9A0063C4BC /* LostPetDetailView.swift in Sources */,
 				A22102B22E2AFA5200103E28 /* RegisterView.swift in Sources */,
-				A28CBC642EE66F6C00734192 /* LostPetRow.swift in Sources */,
 				9B165F3C2CBB40B200BC8DB2 /* MapView.swift in Sources */,
 				A29478C52ED4405E00B94BE7 /* PawPalLogo.swift in Sources */,
 				A29478C62ED4405E00B94BE7 /* LoadingView.swift in Sources */,
@@ -318,10 +314,10 @@
 				9CD26B992E4C018A0004CB4D /* LostPetReportView.swift in Sources */,
 				A2FD3C532EE64E9C000DFCEF /* Color+Extensions.swift in Sources */,
 				AD66E5702D35B5DC00995985 /* AuthService.swift in Sources */,
-				9CF1E1022EF5A1B000000002 /* FirestoreService.swift in Sources */,
 				A22102C12E2B0E3400103E28 /* FlowLayout.swift in Sources */,
 				A22102A72E271B4C00103E28 /* EnterProfileView.swift in Sources */,
 				A22102B02E2AF8C600103E28 /* WelcomeView.swift in Sources */,
+				A22102A92E271B9400103E28 /* MainAppView.swift in Sources */,
 				9C90A8E92E597F650063C4BC /* LostPet.swift in Sources */,
 				9B165F3A2CBB3FF400BC8DB2 /* CommunityView.swift in Sources */,
 				A22102C02E2B0DF100103E28 /* CommunityPost.swift in Sources */,

@@ -52,14 +52,6 @@ struct MainTabView: View {
             // Browse Tab (Lost Pets List)
             NavigationStack {
                 LostPetsView()
-                    .toolbar {
-                        ToolbarItem(placement: .navigationBarTrailing) {
-                            Button("Logout") {
-                                authVM.signOut()
-                            }
-                            .foregroundColor(.red)
-                        }
-                    }
             }
             .tabItem {
                 Label("Browse", systemImage: "list.bullet")

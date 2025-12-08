@@ -11,6 +11,8 @@ import MapKit
 struct LostPetDetailView: View {
     let pet: LostPet
     @State private var showContent = false
+    @State private var showContactAlert = false
+    @State private var showShareSheet = false
 
     private var region: MKCoordinateRegion? {
         guard (-90.0...90.0).contains(pet.latitude),
@@ -140,7 +142,7 @@ struct LostPetDetailView: View {
                     // Contact/Action Buttons
                     VStack(spacing: 12) {
                         Button(action: {
-                            // TODO: Implement contact functionality
+                            showContactAlert = true
                         }) {
                             HStack {
                                 Image(systemName: "phone.fill")
@@ -156,7 +158,7 @@ struct LostPetDetailView: View {
                         }
                         
                         Button(action: {
-                            // TODO: Implement share functionality
+                            showShareSheet = true
                         }) {
                             HStack {
                                 Image(systemName: "square.and.arrow.up")
@@ -181,11 +183,37 @@ struct LostPetDetailView: View {
         }
         .navigationTitle("Pet Details")
         .navigationBarTitleDisplayMode(.inline)
+        .alert("Contact Reporter", isPresented: $showContactAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text("Contact information will be available in a future update. For now, you can share this report with others who might help.")
+        }
+        .sheet(isPresented: $showShareSheet) {
+            ShareSheet(items: [generateShareText()])
+        }
         .onAppear {
             withAnimation(.spring(response: 0.8, dampingFraction: 0.7)) {
                 showContent = true
             }
         }
+    }
+    
+    private func generateShareText() -> String {
+        let locationText = "Location: \(pet.latitude), \(pet.longitude)"
+        let timeText = pet.timestampDate.map { "Reported: \(formatted(date: $0))" } ?? ""
+        
+        return """
+        🐾 Lost Pet Alert: \(pet.petName)
+        
+        \(pet.description)
+        
+        \(locationText)
+        \(timeText)
+        
+        Please help reunite \(pet.petName) with their family! 🏡
+        
+        Shared via PawPal
+        """
     }
     
     private func timeAgo(from date: Date) -> String {
@@ -213,6 +241,18 @@ struct LostPetDetailView: View {
         formatter.timeStyle = .short
         return formatter.string(from: date)
     }
+}
+
+// Share Sheet wrapper for UIActivityViewController
+struct ShareSheet: UIViewControllerRepresentable {
+    let items: [Any]
+    
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        let controller = UIActivityViewController(activityItems: items, applicationActivities: nil)
+        return controller
+    }
+    
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
 
 #Preview {

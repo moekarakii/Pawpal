@@ -169,6 +169,10 @@ struct LostPetReportView: View {
                             .frame(height: 200)
                             .cornerRadius(16)
                             .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
+                            .onTapGesture { location in
+                                // Note: SwiftUI Map doesn't support tap-to-place directly
+                                // Users must use the search field to set location
+                            }
                             .onAppear {
                                 if let userLocation = locationManager.location {
                                     setCameraAndPin(to: userLocation.coordinate)
@@ -179,6 +183,12 @@ struct LostPetReportView: View {
                                     setCameraAndPin(to: coord)
                                 }
                             }
+                            
+                            Text("Note: Use the search field above to set the exact location")
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
+                                .italic()
+                                .padding(.horizontal, 4)
                         }
                     }
                     .padding(.horizontal)
@@ -284,7 +294,7 @@ struct LostPetReportView: View {
                 setCameraAndPin(to: coordinate)
                 searchQuery = completion.title
 
-                // 👇 Delay hiding suggestions to fix render glitch
+                // Delay hiding suggestions to fix render glitch
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     completerDelegateWrapper.results = []
                 }

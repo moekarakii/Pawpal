@@ -28,11 +28,6 @@ struct RegisterView: View {
                     PawPalLogo(size: 90, showText: true)
                         .padding(.bottom, 10)
                     
-                    Text("Join PawPal")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .padding(.bottom, 5)
-                    
                     Text("Help reunite lost pets with their families")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
