@@ -49,78 +49,167 @@ struct LostPetReportView: View {
     @State private var isSubmitting: Bool = false
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 16) {
-                TextField("Pet Name", text: $petName)
-                    .textFieldStyle(.roundedBorder)
-
-                TextField("Description", text: $petDescription)
-                    .textFieldStyle(.roundedBorder)
-
-                Text("Tap to move the red pin to the last seen location")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-
-                TextField("Search for a place...", text: $searchQuery)
-                    .textFieldStyle(.roundedBorder)
-                    .onChange(of: searchQuery) { newValue in
-                        print("🔤 User typed: \(newValue)")
-                        searchCompleter.queryFragment = newValue
+        ZStack {
+            // Background Color
+            Color.theme.babyBlueLight // Very light baby blue background
+                .ignoresSafeArea()
+            
+            ScrollView {
+                VStack(spacing: 24) {
+                    // Header Section
+                    VStack(spacing: 8) {
+                        Image(systemName: "square.and.pencil.circle.fill")
+                            .font(.system(size: 60))
+                            .foregroundStyle(Color.theme.babyBlue)
+                            .padding(.bottom, 4)
+                        
+                        Text("Help Find a Lost Pet")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                        
+                        Text("Fill out the details below to alert the community.")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
                     }
-                    .onAppear {
-                        print("🧩 Setting completer delegate")
-                        searchCompleter.delegate = completerDelegateWrapper
-                        searchCompleter.resultTypes = .address
-                    }
+                    .padding(.top, 10)
 
-                if !completerDelegateWrapper.results.isEmpty {
-                    VStack(alignment: .leading, spacing: 8) {
-                        ForEach(completerDelegateWrapper.results) { result in
-                            VStack(alignment: .leading) {
-                                Text(result.title)
-                                    .font(.body)
-                                Text(result.subtitle)
+                    // Form Section
+                    VStack(spacing: 20) {
+                        // Pet Name Input
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Pet Name")
+                                .font(.headline)
+                                .foregroundColor(.primary)
+                            
+                            TextField("e.g. Bella", text: $petName)
+                                .padding()
+                                .background(Color.white)
+                                .cornerRadius(12)
+                                .shadow(color: Color.black.opacity(0.05), radius: 2, x: 0, y: 1)
+                        }
+
+                        // Description Input
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Description")
+                                .font(.headline)
+                                .foregroundColor(.primary)
+                            
+                            TextField("Breed, color, collar, distinct marks...", text: $petDescription, axis: .vertical)
+                                .lineLimit(3...6)
+                                .padding()
+                                .background(Color.white)
+                                .cornerRadius(12)
+                                .shadow(color: Color.black.opacity(0.05), radius: 2, x: 0, y: 1)
+                        }
+                        
+                        // Location Search
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Last Seen Location")
+                                .font(.headline)
+                                .foregroundColor(.primary)
+                            
+                            TextField("Search for a place...", text: $searchQuery)
+                                .padding()
+                                .background(Color.white)
+                                .cornerRadius(12)
+                                .shadow(color: Color.black.opacity(0.05), radius: 2, x: 0, y: 1)
+                                .onChange(of: searchQuery) { newValue in
+                                    print("🔤 User typed: \(newValue)")
+                                    searchCompleter.queryFragment = newValue
+                                }
+                                .onAppear {
+                                    print("🧩 Setting completer delegate")
+                                    searchCompleter.delegate = completerDelegateWrapper
+                                    searchCompleter.resultTypes = .address
+                                }
+                        }
+
+                        if !completerDelegateWrapper.results.isEmpty {
+                            VStack(alignment: .leading, spacing: 0) {
+                                ForEach(completerDelegateWrapper.results) { result in
+                                    VStack(alignment: .leading) {
+                                        Text(result.title)
+                                            .font(.body)
+                                            .foregroundColor(.primary)
+                                        Text(result.subtitle)
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                    }
+                                    .padding()
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .background(Color.white)
+                                    .onTapGesture {
+                                        UIApplication.shared.endEditing()
+                                        selectSearchCompletion(result.completion)
+                                    }
+                                    
+                                    if result.id != completerDelegateWrapper.results.last?.id {
+                                        Divider()
+                                    }
+                                }
+                            }
+                            .cornerRadius(12)
+                            .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
+                        }
+
+                        // Map View
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack {
+                                Image(systemName: "mappin.and.ellipse")
+                                    .foregroundColor(.red)
+                                Text("Tap map to adjust pin")
                                     .font(.caption)
-                                    .foregroundColor(.gray)
+                                    .foregroundColor(.secondary)
                             }
-                            .padding(.vertical, 4)
-                            .onTapGesture {
-                                UIApplication.shared.endEditing()
-                                selectSearchCompletion(result.completion)
+                            
+                            Map(position: $cameraPosition) {
+                                Marker(petName.isEmpty ? "Last Seen" : petName, coordinate: pinCoordinate)
                             }
-                            Divider()
+                            .frame(height: 200)
+                            .cornerRadius(16)
+                            .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
+                            .onAppear {
+                                if let userLocation = locationManager.location {
+                                    setCameraAndPin(to: userLocation.coordinate)
+                                }
+                            }
+                            .onReceive(locationManager.$location) { _ in
+                                if !hasManuallySelectedLocation, let coord = locationManager.location?.coordinate {
+                                    setCameraAndPin(to: coord)
+                                }
+                            }
                         }
                     }
                     .padding(.horizontal)
-                    .background(Color(.systemBackground))
-                }
 
-                Map(position: $cameraPosition) {
-                    Marker(petName.isEmpty ? "Last Seen" : petName, coordinate: pinCoordinate)
-                }
-                .frame(height: 250)
-                .onAppear {
-                    if let userLocation = locationManager.location {
-                        setCameraAndPin(to: userLocation.coordinate)
+                    // Submit Button
+                    Button(action: submitLostPetReport) {
+                        HStack {
+                            if isSubmitting {
+                                ProgressView()
+                                    .tint(.white)
+                                    .padding(.trailing, 5)
+                            }
+                            Text(isSubmitting ? "Submitting..." : "Submit Report")
+                                .font(.headline)
+                                .fontWeight(.bold)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 56)
+                        .background(Color.theme.babyBlue)
+                        .foregroundColor(.white)
+                        .cornerRadius(28)
+                        .shadow(color: Color.theme.babyBlue.opacity(0.4), radius: 8, x: 0, y: 4)
                     }
+                    .disabled(isSubmitting)
+                    .padding(.horizontal)
+                    .padding(.bottom, 30)
                 }
-                .onReceive(locationManager.$location) { _ in
-                    // is pinging every frame
-//                    print("📍 Location changed to: \(String(describing: locationManager.location?.coordinate))")
-                    if !hasManuallySelectedLocation, let coord = locationManager.location?.coordinate {
-                        setCameraAndPin(to: coord)
-                    }
-                }
-
-                Button("Submit Report") {
-                    submitLostPetReport()
-                }
-                .buttonStyle(.borderedProminent)
             }
-            .padding()
         }
         .navigationTitle("Report Lost Pet")
-
+        .navigationBarTitleDisplayMode(.inline)
         .alert(isPresented: $showAlert) {
             Alert(
                 title: Text("Report Status"),
