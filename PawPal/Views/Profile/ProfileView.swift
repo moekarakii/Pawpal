@@ -64,7 +64,7 @@ struct ProfileView: View {
                     .font(.subheadline)
                     .foregroundColor(.secondary)
 
-                // 🧷 Characteristics
+                // Characteristics
                 if !petProfile.characteristics.isEmpty {
                     VStack(alignment: .leading, spacing: 10) {
                         Text("Characteristics")

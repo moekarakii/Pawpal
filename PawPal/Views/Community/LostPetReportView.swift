@@ -294,7 +294,7 @@ struct LostPetReportView: View {
                 setCameraAndPin(to: coordinate)
                 searchQuery = completion.title
 
-                // 👇 Delay hiding suggestions to fix render glitch
+                // Delay hiding suggestions to fix render glitch
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     completerDelegateWrapper.results = []
                 }

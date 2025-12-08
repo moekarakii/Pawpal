@@ -2,7 +2,7 @@
 //  LoadingView.swift
 //  PawPal
 //
-//  Created by GitHub Copilot on 11/23/25.
+//  Created by Moe Karaki on 11/23/25.
 //
 
 import SwiftUI

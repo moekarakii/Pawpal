@@ -2,7 +2,7 @@
 //  PawPalLogo.swift
 //  PawPal
 //
-//  Created by GitHub Copilot on 11/23/25.
+//  Created by Moe Karaki on 11/23/25.
 //
 
 import SwiftUI
@@ -18,7 +18,6 @@ struct PawPalLogo: View {
     
     var body: some View {
         VStack(spacing: showText ? 12 : 0) {
-            // Paw emoji without circle background
             Text("🐾")
                 .font(.system(size: size * 0.5))
             

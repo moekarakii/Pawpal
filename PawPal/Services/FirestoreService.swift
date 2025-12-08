@@ -2,7 +2,7 @@
 //  FirestoreService.swift
 //  PawPal
 //
-//  Created by GitHub Copilot on 12/7/25.
+//  Created by Moe Karaki on 12/7/25.
 //
 
 import FirebaseFirestore
