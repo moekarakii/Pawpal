@@ -19,133 +19,97 @@ struct LoginView: View {
     @State private var errorMessage: String?
     @State private var navigateToProfileSetup = false
     @State private var navigateToMainApp = false
-    @State private var navigateToRegister = false 
+    @State private var navigateToRegister = false
     @State private var logoScale = 0.8
+    @State private var showContent = false
 
     var body: some View {
         NavigationStack {
             ZStack {
-                // Background gradient
-                LinearGradient(
-                    gradient: Gradient(colors: [
-                        Color.blue.opacity(0.05),
-                        Color.purple.opacity(0.02),
-                        Color.white
-                    ]),
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-                .ignoresSafeArea()
+                Color.themeBackground.ignoresSafeArea()
                 
-                GeometryReader { geometry in
-                    ScrollView {
-                        VStack(spacing: 0) {
-                            Spacer(minLength: geometry.size.height * 0.05)
-
-                            // PawPal Logo - moved up higher
-                            PawPalLogo(size: 85, showText: true)
-                                .scaleEffect(logoScale)
-                                .onAppear {
-                                    withAnimation(.spring(response: 1.0, dampingFraction: 0.7)) {
-                                        logoScale = 1.0
-                                    }
-                                }
-
-                            Spacer(minLength: geometry.size.height * 0.08)
-
-                            // Welcome back text - centered with better spacing
-                            VStack(spacing: 8) {
-                                Text("Welcome Back!")
-                                    .font(.title)
-                                    .fontWeight(.bold)
-                                    .foregroundColor(.primary)
-                                
-                                Text("Sign in to continue helping pets find their way home")
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
-                                    .multilineTextAlignment(.center)
-                                    .padding(.horizontal, 20)
-                                    .lineLimit(2)
-                            }
-
-                            Spacer(minLength: geometry.size.height * 0.06)
-
-                            // Form fields
-                            VStack(spacing: 16) {
-                                TextField("Email", text: $email)
-                                    .textFieldStyle(.roundedBorder)
-                                    .autocapitalization(.none)
-                                    .keyboardType(.emailAddress)
-
-                                SecureField("Password", text: $password)
-                                    .textFieldStyle(.roundedBorder)
-
-                                if let error = errorMessage {
-                                    Text(error)
-                                        .foregroundColor(.red)
-                                        .font(.caption)
-                                        .multilineTextAlignment(.center)
-                                }
-                            }
-                            .padding(.horizontal, 20)
-
-                            Spacer(minLength: geometry.size.height * 0.05)
-
-                            // Login buttons
-                            VStack(spacing: 16) {
-                                Button("Sign In") {
-                                    loginWithEmail()
-                                }
-                                .frame(maxWidth: .infinity)
-                                .frame(height: 50)
-                                .background(
-                                    LinearGradient(
-                                        gradient: Gradient(colors: [Color.blue, Color.purple.opacity(0.8)]),
-                                        startPoint: .leading,
-                                        endPoint: .trailing
-                                    )
-                                )
-                                .foregroundColor(.white)
-                                .fontWeight(.semibold)
-                                .cornerRadius(25)
-                                .shadow(color: .blue.opacity(0.3), radius: 5, x: 0, y: 3)
-
-                                GoogleSignInButton {
-                                    googleLogin()
-                                }
-                                .frame(height: 50)
-                                .cornerRadius(25)
-                                .shadow(color: .gray.opacity(0.3), radius: 5, x: 0, y: 3)
-                            }
-                            .padding(.horizontal, 20)
-
-                            Spacer(minLength: geometry.size.height * 0.04)
-
-                            // Register link
-                            Button("Don't have an account? Create one") {
-                                navigateToRegister = true
-                            }
-                            .foregroundColor(.blue)
-                            .fontWeight(.medium)
-
-                            Spacer(minLength: geometry.size.height * 0.08)
+                VStack {
+                    if showContent {
+                        Spacer()
+                        
+                        PawPalLogo(size: 100, showText: true)
+                            .padding(.bottom, 20)
+                        
+                        VStack(spacing: 20) {
+                            TextField("Email", text: $email)
+                                .padding()
+                                .background(Color.white)
+                                .cornerRadius(10)
+                                .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
+                                .autocapitalization(.none)
+                                .keyboardType(.emailAddress)
+                            
+                            SecureField("Password", text: $password)
+                                .padding()
+                                .background(Color.white)
+                                .cornerRadius(10)
+                                .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
                         }
+                        .padding(.horizontal, 30)
+                        
+                        if let errorMessage = errorMessage {
+                            Text(errorMessage)
+                                .foregroundColor(.red)
+                                .padding(.top, 10)
+                        }
+                        
+                        Button(action: login) {
+                            Text("Login")
+                                .fontWeight(.bold)
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.theme.babyBlue)
+                                .cornerRadius(10)
+                                .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 10)
+                        }
+                        .padding(.top, 20)
+                        .padding(.horizontal, 30)
+                        
+                        GoogleSignInButton(viewModel: GoogleSignInButtonViewModel(scheme: .dark, style: .wide, state: .normal)) {
+                            handleGoogleSignIn()
+                        }
+                        .padding(.top, 10)
+                        .padding(.horizontal, 30)
+                        
+                        Spacer()
+                        
+                        HStack {
+                            Text("Don't have an account?")
+                            Button(action: { navigateToRegister = true }) {
+                                Text("Sign Up")
+                                    .fontWeight(.bold)
+                                    .foregroundColor(.theme.babyBlue)
+                            }
+                        }
+                        .padding(.bottom, 20)
                     }
                 }
+                .onAppear {
+                    withAnimation(.easeInOut(duration: 0.5)) {
+                        showContent = true
+                    }
+                }
+                .navigationDestination(isPresented: $navigateToMainApp) {
+                    MainTabView()
+                }
+                .navigationDestination(isPresented: $navigateToProfileSetup) {
+                    EnterProfileView()
+                }
+                .navigationDestination(isPresented: $navigateToRegister) {
+                    RegisterView()
+                }
             }
-            .navigationDestination(isPresented: $navigateToProfileSetup) {
-                EnterProfileView()
-            }
-            .navigationDestination(isPresented: $navigateToMainApp) {
-                MainTabView()
-            }
-            .navigationDestination(isPresented: $navigateToRegister) {
-                RegisterView()
-            }
+            .navigationBarHidden(true)
         }
     }
 
-    private func loginWithEmail() {
+    private func login() {
         guard !email.isEmpty, !password.isEmpty else {
             errorMessage = "Email or password field is empty."
             return
@@ -160,13 +124,12 @@ struct LoginView: View {
         }
     }
 
-    private func googleLogin() {
+    private func handleGoogleSignIn() {
         guard let clientID = FirebaseApp.app()?.options.clientID else {
             errorMessage = "Firebase clientID is missing."
             return
         }
 
-        //This line ensures Google Sign-In uses the correct iOS client ID
         GIDSignIn.sharedInstance.configuration = GIDConfiguration(clientID: clientID)
 
         guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,

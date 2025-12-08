@@ -19,12 +19,11 @@ struct WelcomeView: View {
             // Background gradient
             LinearGradient(
                 gradient: Gradient(colors: [
-                    Color.blue.opacity(0.05),
-                    Color.purple.opacity(0.02),
+                    Color(red: 0.53, green: 0.81, blue: 0.92).opacity(0.1), // Baby blue light
                     Color.white
                 ]),
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
+                startPoint: .top,
+                endPoint: .bottom
             )
             .ignoresSafeArea()
             
@@ -48,8 +47,8 @@ struct WelcomeView: View {
                 VStack(spacing: 20) {
                     Text("Helping reunite lost pets with their families.")
                         .font(.title3)
-                        .fontWeight(.medium)
-                        .foregroundColor(.secondary)
+                        .fontWeight(.bold) // Made bolder
+                        .foregroundColor(Color(red: 0.53, green: 0.81, blue: 0.92)) // Baby blue text
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 25)
                         .opacity(textOpacity)
@@ -57,7 +56,7 @@ struct WelcomeView: View {
                     
                     Text("Join our community of pet lovers working together to bring every furry friend home safely.")
                         .font(.body)
-                        .foregroundColor(.gray)
+                        .foregroundColor(.secondary)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 35)
                         .opacity(textOpacity)
@@ -74,7 +73,7 @@ struct WelcomeView: View {
                 // Get Started button
                 NavigationLink(destination: LoginView()) {
                     HStack(spacing: 10) {
-                        Image(systemName: "arrow.right.circle.fill")
+                        Image(systemName: "pawprint.fill") // Changed to pawprint
                             .font(.title3)
                         
                         Text("Get Started")
@@ -84,15 +83,9 @@ struct WelcomeView: View {
                     .foregroundColor(.white)
                     .frame(maxWidth: 300)
                     .frame(height: 56)
-                    .background(
-                        LinearGradient(
-                            gradient: Gradient(colors: [Color.blue, Color.purple.opacity(0.8)]),
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
-                    )
+                    .background(Color(red: 0.53, green: 0.81, blue: 0.92)) // Baby blue solid
                     .cornerRadius(28)
-                    .shadow(color: .blue.opacity(0.3), radius: 10, x: 0, y: 5)
+                    .shadow(color: Color(red: 0.53, green: 0.81, blue: 0.92).opacity(0.4), radius: 10, x: 0, y: 5)
                 }
                 .scaleEffect(buttonScale)
                 .padding(.horizontal, 40)

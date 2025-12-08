@@ -11,37 +11,62 @@ struct LostPetRow: View {
     let pet: LostPet
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                VStack(alignment: .leading, spacing: 4) {
+        HStack(alignment: .top, spacing: 16) {
+            // Pet Icon / Avatar
+            ZStack {
+                Circle()
+                    .fill(Color.theme.babyBlue.opacity(0.2))
+                    .frame(width: 60, height: 60)
+                
+                Image(systemName: "pawprint.fill")
+                    .font(.system(size: 24))
+                    .foregroundColor(Color.theme.babyBlue)
+            }
+            
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
                     Text(pet.petName)
-                        .font(.headline)
+                        .font(.title3)
+                        .fontWeight(.bold)
                         .foregroundColor(.primary)
+                        .lineLimit(1)
                     
-                    Text(pet.description)
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                        .lineLimit(2)
+                    Spacer()
                     
                     if let timestamp = pet.timestamp {
-                        Text("Reported \(timeAgoString(from: timestamp))")
+                        Text(timeAgoString(from: timestamp))
                             .font(.caption)
-                            .foregroundColor(.gray)
+                            .fontWeight(.medium)
+                            .foregroundColor(.secondary)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .background(Color.gray.opacity(0.1))
+                            .cornerRadius(8)
                     }
                 }
                 
+                Text(pet.description)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                    .lineLimit(2)
+                    .fixedSize(horizontal: false, vertical: true)
+                
                 Spacer()
                 
-                Image(systemName: "location.fill")
-                    .foregroundColor(.red)
-                    .font(.title2)
+                HStack(spacing: 4) {
+                    Image(systemName: "mappin.and.ellipse")
+                        .font(.caption)
+                        .foregroundColor(.red.opacity(0.8))
+                    
+                    Text("Tap to see location")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
             }
-            
-            Divider()
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .padding(.vertical, 8)
-        .padding(.horizontal, 16)
-        .background(Color(.systemBackground))
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(16)
     }
     
     private func timeAgoString(from date: Date) -> String {

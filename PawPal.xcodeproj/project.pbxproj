@@ -41,6 +41,7 @@
 		A27BC4E92E1E158500A03862 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = A27BC4E82E1E158500A03862 /* FirebaseFirestore */; };
 		A29478C52ED4405E00B94BE7 /* PawPalLogo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29478C42ED4405E00B94BE7 /* PawPalLogo.swift */; };
 		A29478C62ED4405E00B94BE7 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29478C32ED4405E00B94BE7 /* LoadingView.swift */; };
+		A2FD3C532EE64E9C000DFCEF /* Color+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FD3C512EE64E9C000DFCEF /* Color+Extensions.swift */; };
 		AD66E5702D35B5DC00995985 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD66E56F2D35B5D500995985 /* AuthService.swift */; };
 /* End PBXBuildFile section */
 
@@ -75,6 +76,7 @@
 		A27B1BC42E4ACC2500D67D57 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A29478C32ED4405E00B94BE7 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		A29478C42ED4405E00B94BE7 /* PawPalLogo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PawPalLogo.swift; sourceTree = "<group>"; };
+		A2FD3C512EE64E9C000DFCEF /* Color+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extensions.swift"; sourceTree = "<group>"; };
 		AD66E56F2D35B5D500995985 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -149,6 +151,7 @@
 		9BC1BC202CBAE7E200F1DD8E /* PawPal */ = {
 			isa = PBXGroup;
 			children = (
+				A2FD3C522EE64E9C000DFCEF /* Extensions */,
 				A22102B32E2AFEEA00103E28 /* PawPalApp.swift */,
 				9BC1BC212CBAE7E200F1DD8E /* AppDelegate.swift */,
 				A22102BA2E2B053300103E28 /* Services */,
@@ -210,6 +213,14 @@
 				A22102A42E271A9300103E28 /* LoginView.swift */,
 			);
 			path = Main;
+			sourceTree = "<group>";
+		};
+		A2FD3C522EE64E9C000DFCEF /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				A2FD3C512EE64E9C000DFCEF /* Color+Extensions.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -297,6 +308,7 @@
 				A29478C62ED4405E00B94BE7 /* LoadingView.swift in Sources */,
 				9C90A8E12E593D860063C4BC /* MainTabView.swift in Sources */,
 				9CD26B992E4C018A0004CB4D /* LostPetReportView.swift in Sources */,
+				A2FD3C532EE64E9C000DFCEF /* Color+Extensions.swift in Sources */,
 				AD66E5702D35B5DC00995985 /* AuthService.swift in Sources */,
 				A22102C12E2B0E3400103E28 /* FlowLayout.swift in Sources */,
 				A22102A72E271B4C00103E28 /* EnterProfileView.swift in Sources */,

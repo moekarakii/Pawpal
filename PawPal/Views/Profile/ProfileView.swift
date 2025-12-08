@@ -30,47 +30,83 @@ struct ProfileView: View {
                 if let image = petProfile.image {
                     Image(uiImage: image)
                         .resizable()
+                        .scaledToFill() // Ensure image fills the circle
                         .clipShape(Circle())
                         .frame(width: 150, height: 150)
-                        .overlay(Circle().stroke(Color.gray, lineWidth: 2))
+                        .overlay(Circle().stroke(Color(red: 0.53, green: 0.81, blue: 0.92), lineWidth: 4)) // Baby blue border
+                        .shadow(radius: 5)
+                } else {
+                    // Fallback if no image
+                    Circle()
+                        .fill(Color.white)
+                        .frame(width: 150, height: 150)
+                        .overlay(Circle().stroke(Color(red: 0.53, green: 0.81, blue: 0.92), lineWidth: 4))
+                        .shadow(radius: 5)
+                        .overlay(
+                            Image(systemName: "pawprint.fill")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 60)
+                                .foregroundColor(Color(red: 0.53, green: 0.81, blue: 0.92).opacity(0.5))
+                        )
                 }
 
                 Text(petProfile.name)
                     .font(.title)
                     .fontWeight(.bold)
+                    .foregroundColor(.primary)
 
                 Text("Type: \(petProfile.type)")
                     .font(.subheadline)
+                    .foregroundColor(.secondary)
 
                 Text("Age: \(petProfile.age)")
                     .font(.subheadline)
+                    .foregroundColor(.secondary)
 
                 // 🧷 Characteristics
                 if !petProfile.characteristics.isEmpty {
-                    VStack(alignment: .leading) {
-                        Text("Characteristics:")
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("Characteristics")
                             .font(.headline)
+                            .foregroundColor(.primary)
 
                         FlowLayout(alignment: .leading, spacing: 8) {
                             ForEach(petProfile.characteristics, id: \.self) { trait in
                                 Text(trait)
-                                    .padding(.horizontal, 10)
-                                    .padding(.vertical, 6)
-                                    .background(Color.teal)
-                                    .foregroundColor(.white)
+                                    .font(.subheadline)
+                                    .fontWeight(.medium)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 8)
+                                    .background(Color(red: 0.53, green: 0.81, blue: 0.92).opacity(0.15)) // Light baby blue bg
+                                    .foregroundColor(Color(red: 0.3, green: 0.6, blue: 0.8)) // Darker blue text
                                     .clipShape(Capsule())
                             }
                         }
                     }
+                    .padding(.top, 8)
                 }
 
-                Text(petProfile.description)
-                    .font(.body)
+                if !petProfile.description.isEmpty {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("About")
+                            .font(.headline)
+                            .foregroundColor(.primary)
+                        
+                        Text(petProfile.description)
+                            .font(.body)
+                            .foregroundColor(.secondary)
+                            .lineSpacing(4)
+                    }
                     .padding(.top, 8)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                }
             }
-            .padding()
+            .padding(24)
         }
+        .background(Color(red: 0.95, green: 0.98, blue: 1.0).ignoresSafeArea()) // Baby blue background
         .navigationTitle("Pet Profile")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 

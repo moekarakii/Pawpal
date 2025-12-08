@@ -56,11 +56,17 @@ struct LostPetMapView: View {
                     ) {
                         ZStack {
                             Circle()
-                                .fill(Color.blue.opacity(0.25))
-                                .frame(width: 80, height: 80)
-                            Image(systemName: "mappin.circle.fill")
-                                .font(.system(size: 28))
-                                .foregroundColor(.blue)
+                                .fill(Color.babyBlue.opacity(0.3)) // Baby blue opacity
+                                .frame(width: 60, height: 60) // Slightly smaller
+                            
+                            Circle()
+                                .stroke(Color.white, lineWidth: 2)
+                                .frame(width: 60, height: 60)
+                                
+                            Image(systemName: "person.circle.fill") // Changed icon to person
+                                .font(.system(size: 30))
+                                .foregroundColor(Color.babyBlue) // Baby blue
+                                .background(Color.white.clipShape(Circle()))
                         }
                     }
                 }
@@ -70,13 +76,24 @@ struct LostPetMapView: View {
 
             // Empty state message
             if authVM.lostPets.isEmpty {
-                VStack(spacing: 8) {
+                VStack(spacing: 16) {
+                    Image(systemName: "map.circle.fill")
+                        .font(.system(size: 60))
+                        .foregroundStyle(Color.babyBlue.opacity(0.6))
+                    
                     Text("No reports on the map yet")
                         .font(.headline)
+                        .foregroundColor(.primary)
+                    
                     Text("When lost pets are reported, they will show up here.")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal)
                 }
+                .padding()
+                .background(.ultraThinMaterial)
+                .cornerRadius(20)
                 .padding()
             }
         }

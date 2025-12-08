@@ -19,6 +19,13 @@ struct LostPetsView: View {
     @State private var showAlert = false
     @State private var alertMessage = ""
     @State private var searchText = ""
+    @State private var viewMode: ViewMode = .list
+    @State private var showFilters = false
+    
+    enum ViewMode {
+        case list
+        case map
+    }
 
     private var filteredPets: [LostPet] {
         let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -32,58 +39,99 @@ struct LostPetsView: View {
     }
 
     var body: some View {
-
-        // Removed NavigationStack wrapper earlier to fix toolbar duplication
-        Group {
-            if isLoading {
-                VStack(spacing: 12) {
-                    ProgressView("Loading reports…")
-                    Text("Fetching recent lost pet reports")
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
+        ZStack {
+            Color.themeBackground.ignoresSafeArea()
+            
+            VStack(spacing: 0) {
+                // Modern header with segmented control
+                if !lostPets.isEmpty && !isLoading {
+                    VStack(spacing: 12) {
+                        Picker("View Mode", selection: $viewMode.animation(.easeInOut)) {
+                            Label("List", systemImage: "list.bullet").tag(ViewMode.list)
+                            Label("Map", systemImage: "map").tag(ViewMode.map)
+                        }
+                        .pickerStyle(SegmentedPickerStyle())
+                        .padding(.horizontal, 20)
+                        .padding(.top, 10)
+                    }
+                    .background(Color.white)
+                    .shadow(color: Color.black.opacity(0.05), radius: 2, x: 0, y: 2)
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                
+                if isLoading {
+                    VStack(spacing: 20) {
+                        ProgressView()
+                            .scaleEffect(1.8)
+                            .tint(Color.theme.babyBlue)
+                        Text("Fetching lost pet reports...")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                            .foregroundColor(.secondary)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
 
-            } else if lostPets.isEmpty {
-                VStack(spacing: 12) {
-                    Image(systemName: "magnifyingglass")
-                        .font(.system(size: 42))
-                        .foregroundStyle(.secondary)
-                    Text("No reports yet")
-                        .font(.headline)
-                    Text("Be the first to submit a report from the Report tab.")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal)
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-
-            } else {
-                ScrollView {
-                    LazyVStack {
-                        ForEach(filteredPets) { pet in
-                            NavigationLink(destination: LostPetDetailView(pet: pet)) {
-                                LostPetRow(pet: pet)
-                            }
-                            .buttonStyle(PlainButtonStyle())
+                } else if lostPets.isEmpty {
+                    VStack(spacing: 24) {
+                        Image(systemName: "pawprint.circle.fill")
+                            .font(.system(size: 100))
+                            .foregroundColor(Color.theme.babyBlue.opacity(0.6))
+                        
+                        VStack(spacing: 8) {
+                            Text("No Reports Yet")
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .foregroundColor(.primary)
+                            
+                            Text("Be the first to report a lost pet and help bring them home safely.")
+                                .font(.body)
+                                .foregroundColor(.secondary)
+                                .multilineTextAlignment(.center)
+                                .padding(.horizontal, 40)
                         }
                     }
-                    .padding()
-                }
-                .refreshable {
-                    fetchLostPets()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+                } else {
+                    if viewMode == .list {
+                        ScrollView {
+                            LazyVStack(spacing: 12) {
+                                ForEach(filteredPets) { pet in
+                                    NavigationLink(destination: LostPetDetailView(pet: pet)) {
+                                        LostPetRow(pet: pet)
+                                    }
+                                    .frame(maxWidth: .infinity)
+                                    .frame(height: 140)
+                                    .background(Color.white)
+                                    .cornerRadius(16)
+                                    .shadow(color: Color.black.opacity(0.08), radius: 8, x: 0, y: 4)
+                                    .buttonStyle(PlainButtonStyle())
+                                    .transition(.scale.combined(with: .opacity))
+                                }
+                            }
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 12)
+                        }
+                        .refreshable {
+                            fetchLostPets()
+                        }
+                    } else {
+                        LostPetMapView()
+                            .transition(.opacity)
+                    }
                 }
             }
         }
         .toolbar {
-            // Keeping the title here since you had it before (it would probably better to move this to MainTabView. Will come back to this)
             ToolbarItem(placement: .navigationBarLeading) {
-                Text("Lost Pets")
-                    .font(.headline)
+                HStack(spacing: 8) {
+                    Image(systemName: "pawprint.fill")
+                        .foregroundColor(Color.theme.babyBlue)
+                        .font(.headline)
+                    Text("Lost Pets")
+                        .font(.title3)
+                        .fontWeight(.bold)
+                }
             }
-
-            // Removed duplicate logout since we are having the MainTabView Handle this now. 
         }
         .onAppear(perform: fetchLostPets)
         .searchable(

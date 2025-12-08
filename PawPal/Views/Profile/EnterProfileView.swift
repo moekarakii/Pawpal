@@ -29,62 +29,232 @@ struct EnterProfileView: View {
 
     @State private var errorMessage: String?
     @State private var navigateToMainApp = false
+    @State private var showContent = false
+    @State private var isUploading = false
 
     var body: some View {
-        VStack(spacing: 16) {
-            if let image = petImage {
-                Image(uiImage: image)
-                    .resizable()
-                    .clipShape(Circle())
-                    .frame(width: 150, height: 150)
-                    .overlay(Circle().stroke(Color.gray, lineWidth: 2))
-            } else {
-                Circle()
-                    .strokeBorder(style: StrokeStyle(lineWidth: 2))
-                    .frame(width: 150, height: 150)
-                    .overlay(Text("Upload Pet Photo"))
-            }
-
-            Button("Upload Image") {
-                showImagePicker = true
-            }
-
-            Group {
-                TextField("Pet Name", text: $petName)
-                TextField("Pet Type", text: $petType)
-                TextField("Pet Age", text: $petAge)
-                TextField("Characteristics (comma-separated)", text: $petCharacteristics)
-                TextEditor(text: $petDescription)
-                    .frame(height: 100)
-                    .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.gray.opacity(0.3)))
-            }
-            .textFieldStyle(RoundedBorderTextFieldStyle())
-
-            if let error = errorMessage {
-                Text(error).foregroundColor(.red)
-            }
-
-            Button("Submit") {
-                validateAndUpload()
-            }
-            .buttonStyle(.borderedProminent)
-
-            NavigationStack {
-                NavigationLink(value: "mainApp") {
-                    EmptyView()
-                }
-                .navigationDestination(for: String.self) { value in
-                    if value == "mainApp" {
-                        MainTabView()
+        ZStack {
+            Color.themeBackground.ignoresSafeArea()
+            
+            ScrollView {
+                VStack(spacing: 28) {
+                    
+                    // Header with icon
+                    VStack(spacing: 12) {
+                        Image(systemName: "pawprint.circle.fill")
+                            .font(.system(size: 60))
+                            .foregroundColor(Color.theme.babyBlue)
+                            .scaleEffect(showContent ? 1.0 : 0.8)
+                            .opacity(showContent ? 1.0 : 0.0)
+                        
+                        Text("Create Pet Profile")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .opacity(showContent ? 1.0 : 0.0)
+                        
+                        Text("Tell us about your furry companion")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
+                            .opacity(showContent ? 1.0 : 0.0)
                     }
+                    .padding(.top, 20)
+                    
+                    // Image Picker Card
+                    VStack(spacing: 16) {
+                        Button(action: { showImagePicker = true }) {
+                            ZStack {
+                                if let image = petImage {
+                                    Image(uiImage: image)
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 140, height: 140)
+                                        .clipShape(Circle())
+                                        .overlay(
+                                            Circle()
+                                                .stroke(
+                                                    LinearGradient(
+                                                        gradient: Gradient(colors: [Color.theme.babyBlue, Color.theme.babyBlue.opacity(0.6)]),
+                                                        startPoint: .topLeading,
+                                                        endPoint: .bottomTrailing
+                                                    ),
+                                                    lineWidth: 4
+                                                )
+                                        )
+                                        .shadow(color: Color.theme.babyBlue.opacity(0.3), radius: 10, x: 0, y: 5)
+                                } else {
+                                    ZStack {
+                                        Circle()
+                                            .fill(Color.white)
+                                            .frame(width: 140, height: 140)
+                                            .shadow(color: Color.black.opacity(0.08), radius: 8, x: 0, y: 4)
+                                        
+                                        VStack(spacing: 8) {
+                                            Image(systemName: "photo.circle.fill")
+                                                .font(.system(size: 40))
+                                                .foregroundColor(Color.theme.babyBlue)
+                                            Text("Add Photo")
+                                                .font(.caption)
+                                                .fontWeight(.medium)
+                                                .foregroundColor(.secondary)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        
+                        Text(petImage == nil ? "Tap to add a photo" : "Tap to change photo")
+                            .font(.caption)
+                            .foregroundColor(Color.theme.babyBlue)
+                    }
+                    .opacity(showContent ? 1.0 : 0.0)
+
+                    // Form Fields
+                    VStack(spacing: 16) {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Pet Name")
+                                .font(.caption)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.secondary)
+                                .padding(.horizontal, 4)
+                            
+                            TextField("e.g., Buddy", text: $petName)
+                                .padding()
+                                .background(Color.white)
+                                .cornerRadius(12)
+                                .shadow(color: Color.black.opacity(0.08), radius: 8, x: 0, y: 4)
+                        }
+                        
+                        HStack(spacing: 16) {
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("Type")
+                                    .font(.caption)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.secondary)
+                                    .padding(.horizontal, 4)
+                                
+                                TextField("Dog, Cat...", text: $petType)
+                                    .padding()
+                                    .background(Color.white)
+                                    .cornerRadius(12)
+                                    .shadow(color: Color.black.opacity(0.08), radius: 8, x: 0, y: 4)
+                            }
+                            
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("Age")
+                                    .font(.caption)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.secondary)
+                                    .padding(.horizontal, 4)
+                                
+                                TextField("e.g., 3 years", text: $petAge)
+                                    .padding()
+                                    .background(Color.white)
+                                    .cornerRadius(12)
+                                    .shadow(color: Color.black.opacity(0.08), radius: 8, x: 0, y: 4)
+                            }
+                        }
+                        
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Characteristics")
+                                .font(.caption)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.secondary)
+                                .padding(.horizontal, 4)
+                            
+                            TextField("Friendly, energetic, playful...", text: $petCharacteristics)
+                                .padding()
+                                .background(Color.white)
+                                .cornerRadius(12)
+                                .shadow(color: Color.black.opacity(0.08), radius: 8, x: 0, y: 4)
+                        }
+                        
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Description")
+                                .font(.caption)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.secondary)
+                                .padding(.horizontal, 4)
+                            
+                            ZStack(alignment: .topLeading) {
+                                if petDescription.isEmpty {
+                                    Text("Tell us more about your pet...")
+                                        .foregroundColor(.gray.opacity(0.5))
+                                        .padding(.horizontal, 16)
+                                        .padding(.vertical, 16)
+                                }
+                                TextEditor(text: $petDescription)
+                                    .frame(height: 120)
+                                    .padding(8)
+                                    .scrollContentBackground(.hidden)
+                            }
+                            .background(Color.white)
+                            .cornerRadius(12)
+                            .shadow(color: Color.black.opacity(0.08), radius: 8, x: 0, y: 4)
+                        }
+                    }
+                    .padding(.horizontal, 20)
+                    .opacity(showContent ? 1.0 : 0.0)
+
+                    if let error = errorMessage {
+                        HStack(spacing: 8) {
+                            Image(systemName: "exclamationmark.triangle.fill")
+                                .foregroundColor(.orange)
+                            Text(error)
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.orange.opacity(0.1))
+                        .cornerRadius(12)
+                        .padding(.horizontal, 20)
+                    }
+
+                    Button(action: validateAndUpload) {
+                        HStack {
+                            if isUploading {
+                                ProgressView()
+                                    .tint(.white)
+                                    .padding(.trailing, 8)
+                            }
+                            Text(isUploading ? "Saving..." : "Save Profile")
+                                .fontWeight(.bold)
+                        }
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(
+                            LinearGradient(
+                                gradient: Gradient(colors: [Color.theme.babyBlue, Color.theme.babyBlue.opacity(0.8)]),
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                        )
+                        .cornerRadius(12)
+                        .shadow(color: Color.theme.babyBlue.opacity(0.4), radius: 10, x: 0, y: 5)
+                    }
+                    .disabled(isUploading)
+                    .padding(.horizontal, 20)
+                    .padding(.top, 10)
+                    .padding(.bottom, 40)
+                    .opacity(showContent ? 1.0 : 0.0)
                 }
             }
         }
-        .padding()
         .sheet(isPresented: $showImagePicker) {
             ImagePicker(image: $petImage)
         }
-        .navigationTitle("Set Up Pet Profile")
+        .navigationTitle("Pet Profile")
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationDestination(isPresented: $navigateToMainApp) {
+            MainTabView()
+        }
+        .onAppear {
+            withAnimation(.spring(response: 0.8, dampingFraction: 0.7).delay(0.2)) {
+                showContent = true
+            }
+        }
     }
 
     private func validateAndUpload() {
@@ -93,6 +263,9 @@ struct EnterProfileView: View {
             errorMessage = "Please fill in all fields."
             return
         }
+        
+        errorMessage = nil
+        isUploading = true
 
         if let image = petImage {
             uploadImage(image) { imageURL in

@@ -22,15 +22,34 @@ struct MainTabView: View {
 
     //Don't think we need this anymore
     @Environment(\.dismiss) var dismiss
+    
+    init() {
+        // Customizing the Tab Bar appearance
+        let appearance = UITabBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = UIColor.white
+        appearance.shadowColor = .clear // Remove top line
+        
+        // Active item color
+        let itemAppearance = UITabBarItemAppearance()
+        itemAppearance.normal.iconColor = UIColor.systemGray3
+        itemAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.systemGray3]
+        
+        itemAppearance.selected.iconColor = UIColor.Theme.babyBlue // Baby Blue
+        itemAppearance.selected.titleTextAttributes = [.foregroundColor: UIColor.Theme.babyBlue]
+        
+        appearance.stackedLayoutAppearance = itemAppearance
+        appearance.inlineLayoutAppearance = itemAppearance
+        appearance.compactInlineLayoutAppearance = itemAppearance
+        
+        UITabBar.appearance().standardAppearance = appearance
+        UITabBar.appearance().scrollEdgeAppearance = appearance
+    }
 
     var body: some View {
         TabView {
 
             // Browse Tab (Lost Pets List)
-            // Contains a logout button that uses the global
-            // AuthViewModel instead of local logout logic.
-            // Wrapped in its own NavigationStack to avoid
-            // toolbar duplication and disappearance.
             NavigationStack {
                 LostPetsView()
                     .toolbar {
@@ -44,16 +63,6 @@ struct MainTabView: View {
             }
             .tabItem {
                 Label("Browse", systemImage: "list.bullet")
-            }
-
-            // Map Tab — wrapped in NavigationStack to ensure
-            // consistent navigation behavior across tabs.
-          
-            NavigationStack {
-                LostPetMapView()
-            }
-            .tabItem {
-                Label("Map", systemImage: "map")
             }
             
             NavigationStack {
